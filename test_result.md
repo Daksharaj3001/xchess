@@ -364,6 +364,18 @@ agent_communication:
       Please test:
       1. API health check endpoint: GET /api/ should return { message: "Hello World" }
       2. Static analysis of Supabase/Firebase initialization code
+
+  - agent: "main"
+    message: |
+      XChess Rules Engine implemented (Prompt 2):
+      1. Full server-authoritative rules engine in TypeScript
+      2. Two game modes: V1 Classical (8x8) and V2 Artillery (10x10)
+      3. All piece movements including special Archer piece
+      4. Check, checkmate, stalemate detection
+      5. Castling, en passant, pawn promotion
+      6. Archer firing system (6 targets, up to 2 simultaneous attacks)
+      7. Analytics integration for gameplay events
+      8. 34 automated tests - ALL PASSING
   - agent: "testing"
     message: |
       Backend testing complete - ALL TESTS PASSED ✅
