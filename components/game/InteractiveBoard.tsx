@@ -88,12 +88,17 @@ const PieceIcon = memo(function PieceIcon({ piece, size = 'md' }: PieceIconProps
       className={cn(
         sizeClasses[size],
         'select-none transition-transform',
-        piece.color === 'white'
+        !isArcher && (piece.color === 'white'
           ? '[text-shadow:_0_0_3px_rgba(0,0,0,0.6),_0_1px_2px_rgba(0,0,0,0.5)]'
-          : '[text-shadow:_0_0_2px_rgba(255,255,255,0.3)]',
+          : '[text-shadow:_0_0_2px_rgba(255,255,255,0.3)]'),
         isArcher && 'text-2xl md:text-3xl'
       )}
-      style={{ color: piece.color === 'white' ? '#f8f8f8' : '#1a1a1a' }}
+      style={{
+        color: isArcher ? undefined : (piece.color === 'white' ? '#f8f8f8' : '#1a1a1a'),
+        filter: isArcher
+          ? (piece.color === 'white' ? 'brightness(0) invert(1) drop-shadow(0 1px 2px rgba(0,0,0,0.6))' : 'brightness(0) drop-shadow(0 1px 1px rgba(255,255,255,0.3))')
+          : undefined,
+      }}
     >
       {PIECE_DISPLAY[piece.type][piece.color]}
     </span>

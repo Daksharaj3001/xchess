@@ -62,7 +62,7 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             {isAuthenticated ? (
               <>
-                <Link href="/play">
+                <Link href="/play/select">
                   <Button size="lg" className="h-12 px-8">
                     <Swords className="w-5 h-5 mr-2" />
                     Play Now
