@@ -70,17 +70,17 @@ function PlayContent() {
   }
   
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" data-testid="play-page">
       {/* Header */}
       <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-40">
         <div className="container mx-auto px-4 h-14 flex items-center gap-4">
-          <Link href="/">
-            <Button variant="ghost" size="sm">
+          <Link href="/play/select">
+            <Button variant="ghost" size="sm" data-testid="back-button">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back
             </Button>
           </Link>
-          <h1 className="font-semibold flex items-center gap-2">
+          <h1 className="font-semibold flex items-center gap-2" data-testid="game-mode-title">
             {mode === 'v2_artillery' ? (
               <><Target className="w-5 h-5" /> XChess Artillery</>
             ) : (
@@ -88,11 +88,11 @@ function PlayContent() {
             )}
           </h1>
           <div className="ml-auto flex gap-2">
-            <Button variant="outline" size="sm" onClick={() => setIsFlipped(!isFlipped)}>
+            <Button variant="outline" size="sm" onClick={() => setIsFlipped(!isFlipped)} data-testid="flip-board-button">
               <RotateCcw className="w-4 h-4 mr-1" />
               Flip
             </Button>
-            <Button variant="outline" size="sm" onClick={handleReset}>
+            <Button variant="outline" size="sm" onClick={handleReset} data-testid="new-game-button">
               New Game
             </Button>
           </div>
@@ -100,10 +100,10 @@ function PlayContent() {
       </header>
       
       {/* Game area */}
-      <main className="container mx-auto px-4 py-8">
-        <div className="flex flex-col lg:flex-row gap-6 justify-center items-start">
+      <main className="container mx-auto px-4 py-6">
+        <div className="flex flex-col lg:flex-row gap-6 items-start justify-center">
           {/* Board */}
-          <div className="flex justify-center">
+          <div className="flex-shrink-0" data-testid="chess-board-container">
             <InteractiveBoard
               state={gameState}
               legalMoves={legalMoves}
@@ -115,9 +115,9 @@ function PlayContent() {
           </div>
           
           {/* Side panel */}
-          <div className="w-full lg:w-64 space-y-4">
+          <div className="w-full lg:w-72 space-y-4" data-testid="game-side-panel">
             {/* Game status */}
-            <Card>
+            <Card data-testid="game-status-card">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm">Game Status</CardTitle>
               </CardHeader>
@@ -125,37 +125,37 @@ function PlayContent() {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Turn:</span>
-                    <span className="font-medium">
+                    <span className="font-medium" data-testid="current-turn">
                       {gameState.currentTurn === 'white' ? 'White' : 'Black'}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Move:</span>
-                    <span className="font-medium">{gameState.moveNumber}</span>
+                    <span className="font-medium" data-testid="move-number">{gameState.moveNumber}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Mode:</span>
-                    <span className="font-medium">
-                      {gameState.board.length}×{gameState.board.length}
+                    <span className="font-medium" data-testid="board-size">
+                      {gameState.board.length}x{gameState.board.length}
                     </span>
                   </div>
                   {gameState.isCheck && !gameState.isCheckmate && (
-                    <div className="text-orange-600 font-medium">Check!</div>
+                    <div className="text-orange-600 font-medium" data-testid="check-indicator">Check!</div>
                   )}
                   {gameState.isCheckmate && (
-                    <div className="text-red-600 font-medium">
+                    <div className="text-red-600 font-medium" data-testid="checkmate-indicator">
                       Checkmate! {gameState.winner} wins!
                     </div>
                   )}
                   {gameState.isStalemate && (
-                    <div className="text-yellow-600 font-medium">Stalemate!</div>
+                    <div className="text-yellow-600 font-medium" data-testid="stalemate-indicator">Stalemate!</div>
                   )}
                 </div>
               </CardContent>
             </Card>
             
             {/* Captured pieces */}
-            <Card>
+            <Card data-testid="captured-pieces-card">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm">Captured</CardTitle>
               </CardHeader>
@@ -169,10 +169,12 @@ function PlayContent() {
             </Card>
             
             {/* Move history */}
-            <MoveHistory
-              moves={gameState.moveHistory}
-              maxHeight="250px"
-            />
+            <div data-testid="move-history-panel">
+              <MoveHistory
+                moves={gameState.moveHistory}
+                maxHeight="250px"
+              />
+            </div>
           </div>
         </div>
       </main>

@@ -16,14 +16,14 @@ interface CapturedPiecesProps {
   compact?: boolean;
 }
 
-const PIECE_UNICODE: Record<PieceType, string> = {
-  king: '♚',
-  queen: '♛',
-  rook: '♜',
-  bishop: '♝',
-  knight: '♞',
-  pawn: '♟',
-  archer: '🏹',
+const PIECE_UNICODE: Record<PieceType, { white: string; black: string }> = {
+  king: { white: '♔', black: '♚' },
+  queen: { white: '♕', black: '♛' },
+  rook: { white: '♖', black: '♜' },
+  bishop: { white: '♗', black: '♝' },
+  knight: { white: '♘', black: '♞' },
+  pawn: { white: '♙', black: '♟' },
+  archer: { white: '🏹', black: '🏹' },
 };
 
 const PIECE_VALUES: Record<PieceType, number> = {
@@ -68,12 +68,13 @@ function CapturedRow({ pieces, label, advantage, compact }: CapturedRowProps) {
             className={cn(
               'transition-transform hover:scale-110',
               compact ? 'text-lg' : 'text-xl',
-              displayColor === 'white'
-                ? 'text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]'
-                : 'text-gray-800'
             )}
+            style={{ color: displayColor === 'white' ? '#f8f8f8' : '#1a1a1a',
+              textShadow: displayColor === 'white' 
+                ? '0 0 3px rgba(0,0,0,0.6), 0 1px 2px rgba(0,0,0,0.5)' 
+                : '0 0 2px rgba(255,255,255,0.3)' }}
           >
-            {PIECE_UNICODE[piece.type]}
+            {PIECE_UNICODE[piece.type][piece.color]}
           </span>
         ))}
         {pieces.length === 0 && (

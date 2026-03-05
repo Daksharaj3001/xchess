@@ -63,6 +63,17 @@ interface PieceIconProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
+// White pieces use filled unicode, black use outlined
+const PIECE_DISPLAY: Record<PieceType, { white: string; black: string }> = {
+  king: { white: '♔', black: '♚' },
+  queen: { white: '♕', black: '♛' },
+  rook: { white: '♖', black: '♜' },
+  bishop: { white: '♗', black: '♝' },
+  knight: { white: '♘', black: '♞' },
+  pawn: { white: '♙', black: '♟' },
+  archer: { white: '🏹', black: '🏹' },
+};
+
 const PieceIcon = memo(function PieceIcon({ piece, size = 'md' }: PieceIconProps) {
   const sizeClasses = {
     sm: 'text-2xl md:text-3xl',
@@ -78,12 +89,13 @@ const PieceIcon = memo(function PieceIcon({ piece, size = 'md' }: PieceIconProps
         sizeClasses[size],
         'select-none transition-transform',
         piece.color === 'white'
-          ? 'text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]'
-          : 'text-gray-900 drop-shadow-[0_1px_1px_rgba(255,255,255,0.3)]',
+          ? '[text-shadow:_0_0_3px_rgba(0,0,0,0.6),_0_1px_2px_rgba(0,0,0,0.5)]'
+          : '[text-shadow:_0_0_2px_rgba(255,255,255,0.3)]',
         isArcher && 'text-2xl md:text-3xl'
       )}
+      style={{ color: piece.color === 'white' ? '#f8f8f8' : '#1a1a1a' }}
     >
-      {PIECE_UNICODE[piece.type]}
+      {PIECE_DISPLAY[piece.type][piece.color]}
     </span>
   );
 });
@@ -153,6 +165,7 @@ const Square = memo(function Square({
         !disabled && 'cursor-pointer hover:brightness-110',
         disabled && 'cursor-default'
       )}
+      data-testid={`square-${String.fromCharCode(97 + col)}${row + 1}`}
       onClick={onClick}
       onDragOver={onDragOver}
       onDrop={onDrop}
@@ -351,8 +364,8 @@ export function InteractiveBoard({
   
   // Calculate square size based on board size
   const squareSize = boardSize === 10 
-    ? 'w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 lg:w-12 lg:h-12'
-    : 'w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 lg:w-14 lg:h-14';
+    ? 'w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 lg:w-14 lg:h-14'
+    : 'w-11 h-11 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16';
   
   // Generate row/col arrays for rendering
   const displayRows = useMemo(() => {
@@ -620,7 +633,7 @@ export function InteractiveBoard({
   const ranks = Array.from({ length: boardSize }, (_, i) => i + 1);
   
   return (
-    <div className="relative inline-block">
+    <div className="relative inline-block" data-testid="interactive-board">
       {/* Board container */}
       <div className="relative">
         {/* Coordinates - Ranks (left) */}
@@ -714,7 +727,7 @@ export function InteractiveBoard({
       </div>
       
       {/* Turn indicator */}
-      <div className="mt-6 text-center">
+      <div className="mt-8 text-center">
         {state.isCheckmate ? (
           <p className="text-lg font-bold text-red-600">
             Checkmate! {state.winner === 'white' ? 'White' : 'Black'} wins!

@@ -13,7 +13,6 @@ import { updateSession } from '@/lib/supabase/middleware'
 const protectedRoutes = [
   '/profile',
   '/settings',
-  '/play',
   '/games',
 ]
 
