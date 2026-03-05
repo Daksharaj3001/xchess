@@ -33,8 +33,6 @@ export { GAME_MODES, PIECE_VALUES, getPromotionPieces } from './constants';
 export {
   createInitialGameState,
   cloneGameState,
-  positionToAlgebraic,
-  algebraicToPosition,
   getPieceAt,
   findKing,
   findPieces,
@@ -58,3 +56,42 @@ export { isSquareAttacked, isInCheck } from './check';
 
 // Archer utilities (for UI hints)
 export { getArcherFireTargets, validateArcherFireSelection } from './moves/archer';
+
+// Serialization
+export {
+  boardToFen,
+  fenToBoard,
+  serializeGameState,
+  deserializeGameState,
+  positionToAlgebraic,
+  algebraicToPosition,
+  generateMoveNotation,
+  parseUciMove,
+} from './serialization';
+
+// Replay system
+export {
+  createReplayState,
+  reconstructGameAtMove,
+  reconstructGame,
+  stepForward,
+  stepBackward,
+  jumpToMove,
+  jumpToStart,
+  jumpToEnd,
+  getGameState as getReplayState,
+  getMoveAt,
+  getCurrentMove,
+  getFormattedMoveList,
+} from './replay';
+
+// State management (Supabase integration)
+export {
+  getGameState,
+  getGameForReplay,
+  applyMoveToGame,
+} from './state';
+
+// Re-export types from replay
+export type { StoredMove, ReplayState } from './replay';
+

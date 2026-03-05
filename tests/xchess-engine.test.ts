@@ -17,8 +17,9 @@ import {
   Position,
   createInitialGameState,
   cloneGameState,
-} from '../lib/xchess';
+} from '../lib/xchess/engine';
 
+import { GameMode } from '../lib/xchess/types';
 import { isInCheck, isSquareAttacked } from '../lib/xchess/check';
 import { getArcherFireTargets } from '../lib/xchess/moves/archer';
 
