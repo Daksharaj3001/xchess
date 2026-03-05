@@ -80,40 +80,40 @@ NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
 
 ## Supabase Setup
 
-### 1. Create Profiles Table
+### 1. Run Database Migrations
 
-Run this SQL in Supabase SQL Editor:
+Run the SQL migration files in order in Supabase SQL Editor:
 
-```sql
--- Create profiles table
-CREATE TABLE IF NOT EXISTS profiles (
-  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-  email TEXT,
-  username TEXT NOT NULL,
-  avatar_url TEXT,
-  rating INTEGER DEFAULT 1200,
-  games_played INTEGER DEFAULT 0,
-  games_won INTEGER DEFAULT 0,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- Enable RLS
-ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
-
--- Policies
-CREATE POLICY "Public profiles are viewable by everyone"
-  ON profiles FOR SELECT
-  USING (true);
-
-CREATE POLICY "Users can insert their own profile"
-  ON profiles FOR INSERT
-  WITH CHECK (auth.uid() = id);
-
-CREATE POLICY "Users can update their own profile"
-  ON profiles FOR UPDATE
-  USING (auth.uid() = id);
+```bash
+# Migration files located in /supabase/migrations/
+1. 001_initial_schema.sql    # Tables and indexes
+2. 002_rls_policies.sql      # Row Level Security
+3. 003_functions_triggers.sql # Functions and auto-triggers
+4. 004_sample_puzzles.sql    # Sample puzzle data (optional)
 ```
+
+### Database Tables
+
+| Table | Purpose |
+|-------|---------|
+| `profiles` | User accounts with stats |
+| `ratings` | ELO ratings per category (bullet/blitz/rapid/classical/puzzle) |
+| `games` | Complete game records with state |
+| `game_moves` | Individual move history |
+| `matchmaking_queue` | Players seeking matches |
+| `puzzles` | Training puzzles |
+| `puzzle_attempts` | User puzzle history |
+| `reports` | User reports for moderation |
+| `friendships` | Friend relationships |
+
+### Key Features
+
+- **Auto Profile Creation**: Profile created automatically on signup via trigger
+- **Default Ratings**: All rating categories initialized to 1200
+- **Stats Tracking**: Game/puzzle stats auto-updated via triggers
+- **Turn Validation**: RLS ensures only current player can submit moves
+
+See `/supabase/schema.md` for complete documentation.
 
 ### 2. Enable Google OAuth
 
@@ -247,36 +247,19 @@ Add all variables from `.env.example` to your Vercel project settings.
 
 ## Database Schema (Future)
 
-```sql
--- Games
-CREATE TABLE games (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  white_player_id UUID REFERENCES profiles(id),
-  black_player_id UUID REFERENCES profiles(id),
-  status TEXT DEFAULT 'active',
-  result TEXT,
-  time_control TEXT,
-  pgn TEXT,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
+See `/supabase/schema.md` for complete database documentation.
 
--- Moves
-CREATE TABLE moves (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  game_id UUID REFERENCES games(id) ON DELETE CASCADE,
-  move_number INTEGER,
-  notation TEXT,
-  fen TEXT,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
+### Quick Reference
 
--- Puzzles
-CREATE TABLE puzzles (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  fen TEXT NOT NULL,
-  solution TEXT[] NOT NULL,
-  difficulty TEXT,
-  rating INTEGER,
-  themes TEXT[]
-);
-```
+**Game record stores:**
+- Players (white_player_id, black_player_id)
+- Game mode (standard, archer, puzzle, analysis)
+- Current state (FEN, move number, time remaining)
+- Game result (winner, termination reason, rating changes)
+
+**Row Level Security ensures:**
+- Users can only edit their own profile
+- Only game participants can write moves
+- Only current player's turn can submit moves
+- Leaderboards are public read
+- Reports are private to reporter
