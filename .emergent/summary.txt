@@ -1,0 +1,164 @@
+<analysis>
+<original_problem_statement>
+The user wants to build a full-stack web application called XChess.
+
+**PRODUCT REQUIREMENTS:**
+- **Frontend:** Next.js, TypeScript, Tailwind CSS.
+- **Backend:** Supabase for database, authentication, and real-time features.
+- **Analytics:** Firebase for analytics and telemetry.
+- **Deployment:** Vercel via a GitHub repository.
+
+**Key Features Requested:**
+1.  **Architecture (Prompt 0):** Setup initial project structure, Supabase/Firebase initialization, and a reusable API layer.
+2.  **Authentication (Prompt 0, extended):** Implement a full auth flow using Supabase, including email/password (with verification and password reset), Google OAuth, and automatic profile creation on first login. Protected routes are required.
+3.  **Analytics (Prompt 0, extended):** Implement advanced custom event tracking in Firebase for high-level gameplay events (e.g., , , ).
+4.  **Database Schema (Prompt 1):** Implement the full Supabase database schema with tables for , , , , , , , and . Implement Row Level Security (RLS) policies.
+5.  **Rules Engine (Prompt 2):** Create a server-authoritative game rules engine in TypeScript. It must support two game modes (Classical Tactical and XChess Artillery), standard chess rules, and a special Archer piece with a unique Fire ability. The engine must handle move validation, check/checkmate/stalemate detection, and integrate with Supabase and Firebase. It must be modular and fully tested.
+6.  **Replay System (Prompt 3):** Design a game state model that supports serializing board state, reconstructing a game from a move history stored in Supabase, and a replay viewer with step forward/backward functionality.
+7.  **Board UI (Prompt 4):** Build the interactive game board UI in React. It must be responsive, support 8x8 and 10x10 boards, handle piece movement (drag-and-drop, tap-to-select), display legal moves, and implement the special UI for the Archer's Move vs Fire modes, including the targeting system. It must integrate with the backend engine and use Supabase real-time for updates.
+</original_problem_statement>
+
+**User's preferred language**: English
+
+**what currently exists?**
+The project has a robust backend foundation. The initial architecture is complete, with Supabase and Firebase integrated and configured using environment variables. A full user authentication flow (email/password, Google OAuth) is functional. The complete database schema and Row Level Security policies have been defined in SQL migration files. A comprehensive, server-authoritative game rules engine and a game state replay system have been implemented in TypeScript and are passing an extensive suite of automated tests. The frontend consists of basic placeholder pages for home, login, and signup.
+
+**Last working item**:
+-   **Last item agent was working**: Prompt 4 — XChess Board UI + Archer Targeting. The agent acknowledged the user's request to build the interactive board UI but has not started implementation.
+-   **Status**: NOT STARTED
+-   **Agent Testing Done**: N
+-   **Which testing method agent to use?**: frontend testing agent
+-   **User Testing Done**: N
+
+**All Pending/In progress Issue list**:
+-   **Issue 1**: API routes are not exposed.
+    -   **Description**: The business logic for game actions (e.g., ) exists in files like , but these functions have not been exposed as actual HTTP endpoints using Next.js API routes (e.g., in a file like ). The frontend will be unable to communicate with the server-authoritative rules engine without these endpoints. This is a P0 priority.
+    -   **Attempted fixes**: None. This was an oversight.
+    -   **Next debug checklist**:
+        1.  Create a new directory .
+        2.  Inside this directory, create Next.js API route handlers (e.g., , ).
+        3.  In each route handler, import the corresponding logic from .
+        4.  Implement the  function to handle requests, call the business logic, and return a .
+        5.  Add error handling and authentication checks to these endpoints.
+    -   **Why fix this issue and what will be achieved with the fix?**: This is critical to connect the frontend UI to the backend game logic. Fixing this will enable the board UI to send moves for validation and receive updated game states.
+    -   **Status**: NOT STARTED
+    -   **Is recurring issue?**: N
+    -   **Should Test frontend/backend/both after fix?**: backend
+    -   **Blocked on other issue**: None.
+
+**In progress Task List**:
+-   **Task 1**: Implement the Board UI (Prompt 4)
+    -   **Description**: Build the interactive board UI for XChess, supporting two game modes, all pieces, and the Archer firing system.
+    -   **Priority**: P0 (This is the current main task from the user).
+    -   **Where to resume**: Create new React components for the board, pieces, and interaction logic. This will likely involve creating files like , , and , and integrating them into a new game page (e.g., ).
+    -   **What will be achieved with this?**: A fully interactive and playable game board for XChess, which is the core user-facing feature of the application.
+    -   **Status**: NOT STARTED
+    -   **Should Test frontend/backend/both after fix?**: both
+    -   **Blocked on something**: **Issue 1** (API routes not exposed). The UI cannot be fully implemented without the backend endpoints to call.
+
+**Upcoming and Future Tasks**
+There are no further tasks defined by the user beyond the completion of Prompt 4.
+
+**Completed work in this session**
+-   **Architecture Blueprint (Prompt 0)**: Initial project structure, Supabase/Firebase initialization, and a full authentication flow (email/password, Google OAuth).
+-   **Supabase Database & RLS (Prompt 1)**: All database tables (, , , etc.) and Row Level Security policies were created via SQL migration files.
+-   **Server-Authoritative Rules Engine (Prompt 2)**: A complete, modular game logic engine was built in TypeScript, covering all game rules, piece movements (including the Archer), and game state detection (check, checkmate). This is fully covered by 34 automated tests.
+-   **Game State & Replay System (Prompt 3)**: A system for serializing, storing, and reconstructing game states from move history was implemented and is covered by 29 automated tests.
+
+**Earlier issues found/mentioned but not fixed**
+-   **Issue 1**: API routes are not exposed over HTTP. (Details in All Pending/In progress Issue list).
+
+**Known issue recurrence from previous fork**
+-   None.
+
+**Code Architecture**
+
+
+**Key Technical Concepts**
+-   **Frontend**: Next.js 14 (App Router), React, TypeScript, Tailwind CSS
+-   **Backend**: Next.js API Routes, Supabase (PostgreSQL DB, Auth, Realtime)
+-   **Analytics**: Firebase Analytics
+-   **Architecture**: Server-Authoritative game logic, modular engine design.
+
+**key DB schema**
+-   **users**: (Built-in Supabase auth table)
+-   **profiles**: 
+-   **games**: 
+-   **game_moves**: 
+-   **matchmaking_queue**: 
+-   **ratings**: 
+-   **puzzles**: 
+-   **reports**: 
+
+**changes in tech stack**
+-   The project was built using Supabase (PostgreSQL) and Firebase as requested, deviating from the default MongoDB stack mentioned in the system prompt.
+
+**All files of reference**
+-   : Core server-side game logic.
+-   : Core game replay logic.
+-   : All SQL files defining the database schema and RLS policies.
+-   : Automated tests for the game rules engine.
+-   : Automated tests for the replay system.
+-   : Business logic for game actions that needs to be exposed via API routes.
+-   : Handles route protection for authenticated users.
+-   : Defines all required environment variables for Supabase and Firebase.
+
+**Areas that need refactoring**:
+-   None identified. The code structure is modular and clean.
+
+**key api endpoints**
+-   : Handled by Supabase library.
+-   **To be created**:
+    -   : To validate and apply a player's move.
+    -   : To validate and apply the Archer's fire action.
+    -   : To fetch the current state of a game.
+
+**Critical Info for New Agent**
+-   You must first implement the missing Next.js API route handlers to expose the game logic before starting the frontend UI. The business logic is already written in .
+-   The project uses Supabase/Postgres, not MongoDB. All database interactions should use the Supabase client initialized in .
+-   The backend logic (rules engine, replay system) is feature-complete and heavily tested. Trust the existing logic and build the UI on top of it.
+-   The user has provided all necessary credentials, which are correctly configured in the  file. You do not need to ask for them again.
+
+**documents created in this job**
+-   All files under  which define the database schema and security policies.
+-    was updated with schema information.
+-    was updated after successful backend testing.
+
+**Last 10 User Messages and any pending HUMAN messages**
+1.  **User (Prompt 4)**: Requested the interactive board UI with Archer targeting. (IN PROGRESS - NOT STARTED)
+2.  **Agent**: Acknowledged the request.
+3.  **User (Prompt 3)**: Requested the game state model and replay system. (COMPLETED)
+4.  **Agent**: Acknowledged and implemented the replay system.
+5.  **User (Prompt 2)**: Requested the server-authoritative rules engine. (COMPLETED)
+6.  **Agent**: Acknowledged and implemented the rules engine.
+7.  **User (Prompt 1)**: Requested the Supabase DB schema and RLS. (COMPLETED)
+8.  **Agent**: Acknowledged and implemented the schema.
+9.  **User**: Provided detailed requirements for auth, analytics, and environment variables. (COMPLETED)
+10. **User**: Provided Supabase and Firebase credentials. (COMPLETED)
+
+**Project Health Check:**
+-   **Broken**:
+    -   API endpoints for game logic are not exposed, preventing frontend-backend communication for gameplay.
+-   **Mocked**:
+    -   None.
+
+**3rd Party Integrations**
+-   **Supabase**: Used for database (PostgreSQL), authentication, and real-time. Keys are configured via environment variables.
+-   **Firebase**: Used for analytics. Keys are configured via environment variables.
+
+**Testing status**
+-   **Testing agent used after significant changes**: NO (Agent ran tests manually via yarn run v1.22.22
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.).
+-   **Troubleshoot agent used after agent stuck in loop**: NO.
+-   **Test files created**:
+    -   
+    -   
+-   **Known regressions**: None. All 63 backend tests are passing.
+
+**Credentials to test flow:**
+Credentials for Supabase and Firebase were provided by the user and are stored in the  file. Do not ask for them again. The application is configured to use them.
+
+**What agent forgot to execute**
+-   The agent wrote the business logic for handling game moves in  but forgot to create the corresponding Next.js API route files (e.g., ) to expose this logic over HTTP. This is the most critical missing piece required before starting the UI development.
+
+</analysis>
