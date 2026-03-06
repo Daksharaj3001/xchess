@@ -101,26 +101,26 @@ export const MoveHistory = memo(function MoveHistory({
   }, [currentMoveIndex]);
   
   return (
-    <Card>
+    <Card className="bg-zinc-800 border-zinc-700">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm flex items-center justify-between">
+        <CardTitle className="text-sm flex items-center justify-between text-zinc-200">
           <span>Moves</span>
-          <span className="text-xs text-muted-foreground font-normal">
+          <span className="text-xs text-zinc-500 font-normal">
             {moves.length} move{moves.length !== 1 ? 's' : ''}
           </span>
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">
         <ScrollArea style={{ maxHeight }} ref={scrollRef}>
-          <div className="p-2 space-y-1">
+          <div className="p-2 space-y-0.5">
             {formattedMoves.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-4">
+              <p className="text-sm text-zinc-500 text-center py-4">
                 No moves yet
               </p>
             ) : (
               formattedMoves.map((entry) => (
                 <div key={entry.moveNumber} className="flex items-center gap-1 text-sm">
-                  <span className="text-muted-foreground w-6 text-right">
+                  <span className="text-zinc-500 w-6 text-right text-xs">
                     {entry.moveNumber}.
                   </span>
                   
@@ -130,9 +130,9 @@ export const MoveHistory = memo(function MoveHistory({
                       onClick={() => onMoveClick?.(entry.white!.index)}
                       disabled={!onMoveClick}
                       className={cn(
-                        'flex-1 text-left px-2 py-1 rounded transition-colors',
-                        onMoveClick && 'hover:bg-muted cursor-pointer',
-                        currentMoveIndex === entry.white.index && 'bg-primary text-primary-foreground'
+                        'flex-1 text-left px-2 py-1 rounded transition-colors text-zinc-200',
+                        onMoveClick && 'hover:bg-zinc-700 cursor-pointer',
+                        currentMoveIndex === entry.white.index && 'bg-[#b94a4a] text-white'
                       )}
                     >
                       {entry.white.san}
@@ -145,9 +145,9 @@ export const MoveHistory = memo(function MoveHistory({
                       onClick={() => onMoveClick?.(entry.black!.index)}
                       disabled={!onMoveClick}
                       className={cn(
-                        'flex-1 text-left px-2 py-1 rounded transition-colors',
-                        onMoveClick && 'hover:bg-muted cursor-pointer',
-                        currentMoveIndex === entry.black.index && 'bg-primary text-primary-foreground'
+                        'flex-1 text-left px-2 py-1 rounded transition-colors text-zinc-200',
+                        onMoveClick && 'hover:bg-zinc-700 cursor-pointer',
+                        currentMoveIndex === entry.black.index && 'bg-[#b94a4a] text-white'
                       )}
                     >
                       {entry.black.san}

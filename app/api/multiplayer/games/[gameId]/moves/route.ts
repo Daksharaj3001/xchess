@@ -1,6 +1,7 @@
 /**
  * POST /api/multiplayer/games/[gameId]/moves - Submit a move
  * Server-authoritative: validates move using XChess engine
+ * Handles timer logic: deduct elapsed time, add increment, detect timeout
  */
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/lib/mongodb';
@@ -36,31 +37,72 @@ export async function POST(
 
     const state = game.state as GameState;
 
-    // Verify it's this player's turn
     if (state.currentTurn !== playerColor) {
       return NextResponse.json({ error: 'Not your turn' }, { status: 400 });
     }
 
-    // Verify move number matches (desync prevention)
     if (state.moveHistory.length !== moveNumber) {
       return NextResponse.json({
         error: 'State desynchronized',
         expectedMoveNumber: state.moveHistory.length,
         state: game.state,
         legalMoves: game.legalMoves,
+        whiteTimeMs: game.whiteTimeMs,
+        blackTimeMs: game.blackTimeMs,
       }, { status: 409 });
     }
 
-    // Apply move using the engine
+    // Timer logic
+    const hasTimer = game.timeControl && game.timeControl.base > 0;
+    let whiteTimeMs = game.whiteTimeMs || 0;
+    let blackTimeMs = game.blackTimeMs || 0;
+    const now = Date.now();
+
+    if (hasTimer && game.lastMoveAt) {
+      const elapsed = now - new Date(game.lastMoveAt).getTime();
+      if (playerColor === 'white') {
+        whiteTimeMs = Math.max(0, whiteTimeMs - elapsed);
+        if (whiteTimeMs <= 0) {
+          // Timeout — opponent wins
+          await db.collection('games').updateOne({ gameId }, {
+            $set: { status: 'completed', result: 'black_wins', whiteTimeMs: 0, updatedAt: new Date().toISOString() },
+          });
+          return NextResponse.json({
+            success: false, error: 'Time expired',
+            gameStatus: 'completed', gameResult: 'black_wins',
+            whiteTimeMs: 0, blackTimeMs,
+          });
+        }
+      } else {
+        blackTimeMs = Math.max(0, blackTimeMs - elapsed);
+        if (blackTimeMs <= 0) {
+          await db.collection('games').updateOne({ gameId }, {
+            $set: { status: 'completed', result: 'white_wins', blackTimeMs: 0, updatedAt: new Date().toISOString() },
+          });
+          return NextResponse.json({
+            success: false, error: 'Time expired',
+            gameStatus: 'completed', gameResult: 'white_wins',
+            whiteTimeMs, blackTimeMs: 0,
+          });
+        }
+      }
+    }
+
+    // Apply move
     const result = applyMove(state, from, to, promotionPiece, archerTargets);
 
     if (!result.success || !result.newState) {
       return NextResponse.json({ error: result.error || 'Invalid move' }, { status: 400 });
     }
 
+    // Add increment after successful move
+    if (hasTimer && game.timeControl.increment > 0) {
+      if (playerColor === 'white') whiteTimeMs += game.timeControl.increment;
+      else blackTimeMs += game.timeControl.increment;
+    }
+
     const newLegalMoves = getLegalMoves(result.newState);
 
-    // Determine game completion
     let newStatus = 'active';
     let gameResult = null;
     if (result.isCheckmate) {
@@ -71,7 +113,6 @@ export async function POST(
       gameResult = 'draw';
     }
 
-    // Store in DB
     await db.collection('games').updateOne(
       { gameId },
       {
@@ -81,6 +122,9 @@ export async function POST(
           status: newStatus,
           result: gameResult,
           moveCount: result.newState.moveHistory.length,
+          whiteTimeMs,
+          blackTimeMs,
+          lastMoveAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         },
       }
@@ -95,6 +139,8 @@ export async function POST(
       isStalemate: result.isStalemate,
       gameStatus: newStatus,
       gameResult,
+      whiteTimeMs,
+      blackTimeMs,
     });
   } catch (error) {
     console.error('Move error:', error);

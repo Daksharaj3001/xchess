@@ -11,10 +11,11 @@ import { v4 as uuidv4 } from 'uuid';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { mode, playerColor, creatorName } = body as {
+    const { mode, playerColor, creatorName, timeControl } = body as {
       mode: GameMode;
       playerColor?: 'white' | 'black' | 'random';
       creatorName?: string;
+      timeControl?: { base: number; increment: number };
     };
 
     if (!mode || !['v1_classical', 'v2_artillery'].includes(mode)) {
@@ -31,6 +32,7 @@ export async function POST(request: Request) {
     else if (playerColor === 'random') assignedColor = Math.random() < 0.5 ? 'white' : 'black';
 
     const now = new Date().toISOString();
+    const hasTimer = timeControl && timeControl.base > 0;
     const gameDoc = {
       gameId,
       mode,
@@ -42,6 +44,10 @@ export async function POST(request: Request) {
       legalMoves: JSON.parse(JSON.stringify(legalMoves)),
       moveCount: 0,
       result: null,
+      timeControl: hasTimer ? { base: timeControl.base, increment: timeControl.increment } : null,
+      whiteTimeMs: hasTimer ? timeControl.base : 0,
+      blackTimeMs: hasTimer ? timeControl.base : 0,
+      lastMoveAt: null,
       createdAt: now,
       updatedAt: now,
     };
