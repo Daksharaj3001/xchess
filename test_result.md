@@ -99,15 +99,16 @@
 
 
 #====================================================================================================
-# Testing Data - PROMPT 6 FEATURES TEST (Red Theme, SVG Pieces, Timer System, Chess.com Layout)
+# Testing Data - PLAY VS BOT FEATURE TEST
 #====================================================================================================
 
 user_problem_statement: |
-  Test the XChess app at https://xchess-bot-play.preview.emergentagent.com with the new Prompt 6 features: 
-  Red Theme UI, SVG pieces, Timer system, Chess.com-style layout.
+  Test the XChess "Play vs Bot" feature on https://xchess-bot-play.preview.emergentagent.com
+
+  The app is a chess platform built with Next.js. The "Play vs Bot" feature allows users to play against an AI opponent with three difficulty levels (Beginner, Casual, Challenger) in both Classical (8x8) and Artillery (10x10) modes.
 
 frontend:
-  - task: "Red Theme UI - Mode Selection Page"
+  - task: "Play vs Bot - Mode Selection & Bot Setup"
     implemented: true
     working: true
     file: "app/play/select/page.tsx"
@@ -117,12 +118,12 @@ frontend:
     status_history:
       - working: "NA"
         agent: "testing"
-        comment: "Testing dark zinc theme (bg-zinc-900) on mode selection page /play/select"
+        comment: "Testing mode selection page with bot setup cards for Classical and Artillery modes"
       - working: true
         agent: "testing"
-        comment: "✅ PASS - Mode selection page with perfect dark zinc theme (bg-zinc-900), 'New Game' heading visible, Classical and Artillery mode cards present, all required data-testids functional"
+        comment: "✅ PASS - Mode selection page loads correctly with 'New Game' heading. Both Classical and Artillery mode cards visible with 'Play vs Bot' buttons. Bot setup card opens correctly with difficulty picker (Beginner/Casual/Challenger), color picker (White/Black/Random), Start Game and Cancel buttons all functional"
 
-  - task: "Red Theme UI - Local Play Board"
+  - task: "Play vs Bot - Classical Mode Game Flow"
     implemented: true
     working: true
     file: "app/play/page.tsx"
@@ -132,57 +133,27 @@ frontend:
     status_history:
       - working: "NA"
         agent: "testing"
-        comment: "Testing red theme board squares: light squares should be #f3d9d9, dark squares #b94a4a (NOT amber/yellow)"
+        comment: "Testing Classical mode vs bot gameplay with move execution and bot AI response"
       - working: true
         agent: "testing"
-        comment: "✅ PASS - Red theme board confirmed! Light squares exactly #f3d9d9 (rgb(243,217,217)) and dark squares #b94a4a as specified. NOT amber/yellow. Chess.com-style layout with embedded coordinates working perfectly."
+        comment: "✅ PASS - Classical vs bot works perfectly! URL parameters correctly set (mode=v1_classical&bot=casual&color=white), game header shows 'Classical vs XBot Casual', human moves (e2-e4) execute successfully, bot responds automatically with 600ms delay as expected, turn indicators work correctly"
 
-  - task: "SVG Chess Pieces Rendering"
+  - task: "Play vs Bot - Bot Difficulty Levels"
     implemented: true
     working: true
-    file: "components/game/ChessPieceSVG.tsx"
+    file: "lib/xchess/bot.ts"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
     status_history:
       - working: "NA"
         agent: "testing"
-        comment: "Testing SVG chess pieces are rendered instead of Unicode text characters"
+        comment: "Testing all three bot difficulty levels: Beginner (Stockfish Jr.), Casual (XBot Casual), Challenger (XBot Challenger)"
       - working: true
         agent: "testing"
-        comment: "✅ PASS - SVG chess pieces confirmed! Found 37+ SVG elements on board indicating proper SVG rendering instead of Unicode text. All pieces (King, Queen, Rook, Bishop, Knight, Pawn, Archer) using vector graphics."
+        comment: "✅ PASS - All bot difficulty levels working! Beginner shows 'Stockfish Jr.', Casual shows 'XBot Casual', Challenger shows 'XBot Challenger'. Different bot names displayed correctly in game headers and turn indicators"
 
-  - task: "Timer System - Local Play"
-    implemented: true
-    working: true
-    file: "components/game/ChessTimer.tsx"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: "NA"
-        agent: "testing"
-        comment: "Testing ChessTimer component display when game has time control"
-      - working: true
-        agent: "testing"
-        comment: "✅ PASS - Local play timer system working! Timer components visible when time control specified, showing correct format (5:00), proper red background for active timers (#b94a4a), and zinc-800 for inactive timers."
-
-  - task: "Timer System - Online Play"
-    implemented: true
-    working: true
-    file: "app/game/[gameId]/page.tsx"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: "NA"
-        agent: "testing"
-        comment: "Testing online game timer display and functionality"
-      - working: true
-        agent: "testing"
-        comment: "✅ PASS - Online timer system excellent! Created 5+3 game, both timer-white and timer-black components visible, correct format (5:00), proper state management (active/inactive), all data-testids present."
-
-  - task: "Chess.com Style Layout - Classical Mode"
+  - task: "Play vs Bot - Color Selection (Black/White)"
     implemented: true
     working: true
     file: "app/play/page.tsx"
@@ -192,12 +163,12 @@ frontend:
     status_history:
       - working: "NA"
         agent: "testing"
-        comment: "Testing chess.com style layout with embedded coordinates and captured pieces"
+        comment: "Testing bot play as both white and black, ensuring bot makes first move when playing as white"
       - working: true
         agent: "testing"
-        comment: "✅ PASS - Chess.com layout perfect! Embedded coordinates (a-h, 1-8) in corners of squares, captured pieces displayed above/below board, side panel with game status and move history, proper dark theme throughout."
+        comment: "✅ PASS - Color selection works perfectly! When human plays as black, bot (white) makes the first move automatically. Turn management correct in both scenarios. Board perspective and piece placement work as expected"
 
-  - task: "Chess.com Style Layout - Artillery Mode"
+  - task: "Play vs Bot - Artillery Mode (10x10 Board)"
     implemented: true
     working: true
     file: "app/play/page.tsx"
@@ -207,90 +178,45 @@ frontend:
     status_history:
       - working: "NA"
         agent: "testing"
-        comment: "Testing 10x10 artillery board with proper coordinates and SVG archer pieces"
+        comment: "Testing Artillery mode (10x10 board) with bot functionality"
       - working: true
         agent: "testing"
-        comment: "✅ PASS - Artillery mode outstanding! 10x10 board confirmed (j1, j10, a10 squares present), all 10 file coordinates (a-j), 4/4 SVG archer pieces found at expected positions (b1, i1, b10, i10), 'XChess Artillery' header confirmed."
+        comment: "✅ PASS - Artillery mode vs bot excellent! 10x10 board confirmed with squares j1, j10, a10 all visible. Game header correctly shows 'Artillery vs XBot Casual'. Bot setup works for Artillery mode with proper modal display"
 
-  - task: "Online Game Creation with Time Controls"
+  - task: "Play vs Bot - Game Over Flow (Resign)"
     implemented: true
     working: true
-    file: "app/play/select/page.tsx"
+    file: "app/play/page.tsx"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
     status_history:
       - working: "NA"
         agent: "testing"
-        comment: "Testing time control picker with bullet/blitz/rapid/classical categories"
+        comment: "Testing resignation flow with confirmation dialog and game over card"
       - working: true
         agent: "testing"
-        comment: "✅ PASS - Time control system perfect! Found 8/8 time control buttons (bullet_1, bullet_2, blitz_3, blitz_5, blitz_5_3, rapid_10, rapid_15, classical), all categories working, create game and cancel buttons functional."
+        comment: "✅ PASS - Resign functionality perfect! Resign button shows confirm/cancel dialog, resignation executes correctly, game over card displays 'XBot Casual wins by resignation', rematch functionality available"
 
-  - task: "Game Waiting Room - Dark Theme"
+  - task: "Play vs Bot - UI Components & Navigation"
     implemented: true
     working: true
-    file: "app/game/[gameId]/page.tsx"
+    file: "components/game/InteractiveBoard.tsx"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
     status_history:
       - working: "NA"
         agent: "testing"
-        comment: "Testing waiting room with dark theme and proper UI elements"
+        comment: "Testing UI components: move history panel, resign button, current turn indicator, board interactivity"
       - working: true
         agent: "testing"
-        comment: "✅ PASS - Waiting room excellent! Dark zinc theme (bg-zinc-900) confirmed, 'Waiting for Opponent' title, game link input, copy/share buttons, animated bouncing dots, proper localStorage integration."
-
-  - task: "Active Online Game UI"
-    implemented: true
-    working: true
-    file: "app/game/[gameId]/page.tsx"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: "NA"
-        agent: "testing"
-        comment: "Testing active online game with red theme board and timer display"
-      - working: true
-        agent: "testing"
-        comment: "✅ PASS - Active online game superb! Red theme board in online mode confirmed, timer system working, 'Live' connection status, side panel with status/move history, resign functionality with confirmation dialog."
-
-  - task: "Game Not Found Page"
-    implemented: true
-    working: true
-    file: "app/game/[gameId]/page.tsx"
-    stuck_count: 0
-    priority: "medium"
-    needs_retesting: false
-    status_history:
-      - working: "NA"
-        agent: "testing"
-        comment: "Testing game not found page with dark theme"
-      - working: true
-        agent: "testing"
-        comment: "✅ PASS - Game not found page perfect! Dark theme confirmed, proper error message, 'Game Not Found' title, 'Create New Game' button, all UI elements present and functional."
-
-  - task: "Backend Timer API Integration"
-    implemented: true
-    working: true
-    file: "app/api/multiplayer/games/"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: "NA"
-        agent: "testing"
-        comment: "Testing timer API endpoints for time control functionality"
-      - working: true
-        agent: "testing"
-        comment: "✅ PASS - Backend timer APIs working perfectly! Successfully created game with timeControl {base: 300000, increment: 3000}, game joined, timer values correctly managed by backend, API endpoints functional."
+        comment: "✅ PASS - All UI components working excellently! Interactive chess board functional, move history panel visible, resign button accessible, current turn indicator shows correct player/bot names, board squares properly test-id'd for automation"
 
 metadata:
   created_by: "testing_agent"
-  version: "2.0"
-  test_sequence: 2
+  version: "3.0"
+  test_sequence: 3
   run_ui: true
 
 test_plan:
@@ -302,58 +228,71 @@ test_plan:
 agent_communication:
   - agent: "testing"
     message: |
-      🎉 PROMPT 6 FEATURES TESTING COMPLETE - ALL TESTS PASSED ✅
+      🎉 PLAY VS BOT FEATURE TESTING COMPLETE - ALL TESTS PASSED ✅
       
-      Comprehensive Testing Results for Red Theme, SVG Pieces, Timer System, Chess.com Layout:
+      Comprehensive Testing Results for XChess "Play vs Bot" Feature:
       
-      🎨 RED THEME UI:
-      ✅ Dark zinc theme (bg-zinc-900) consistently applied across ALL pages
-      ✅ Red theme board squares CONFIRMED - light #f3d9d9, dark #b94a4a (NOT amber/yellow)
-      ✅ Mode selection page with perfect dark theme and red accent colors
-      ✅ Online game pages maintain dark theme throughout
+      🎮 MODE SELECTION & BOT SETUP:
+      ✅ Mode selection page loads with "New Game" heading
+      ✅ Classical and Artillery mode cards both visible
+      ✅ "Play vs Bot" buttons functional for both modes  
+      ✅ Bot setup card opens with purple theme and bot icon
+      ✅ Difficulty picker: Beginner, Casual, Challenger options
+      ✅ Color picker: White, Black, Random options all functional
+      ✅ Start Game and Cancel buttons work correctly
+      ✅ Cancel functionality properly hides setup card
       
-      🎯 SVG PIECES:
-      ✅ SVG chess pieces rendering confirmed (37+ SVG elements detected)
-      ✅ All piece types using vector graphics instead of Unicode text
-      ✅ Archer pieces in Artillery mode displayed as proper SVG bow-and-arrow shapes
-      ✅ Pieces scale properly and maintain quality at all sizes
+      🏛️ CLASSICAL MODE BOT GAMEPLAY:
+      ✅ URL parameters correctly set (mode=v1_classical&bot=casual&color=white)
+      ✅ Game header displays "Classical vs XBot Casual"
+      ✅ Chess board loads with proper 8x8 layout
+      ✅ Human moves execute successfully (tested e2-e4)
+      ✅ Bot responds automatically with appropriate delay (600ms for casual)
+      ✅ Turn indicators show correct player/bot names ("You" vs "XBot Casual")
+      ✅ Move history panel visible and functional
+      ✅ Resign button accessible and working
       
-      ⏰ TIMER SYSTEM:
-      ✅ Time control picker with all categories (Bullet, Blitz, Rapid, Classical)
-      ✅ All 8 time control buttons functional (1min, 2+1, 3min, 5min, 5+3, 10min, 15+10, 30min)
-      ✅ Timer components display correct format (5:00 for 5-minute games)
-      ✅ Active timers show red background (#b94a4a), inactive show zinc-800
-      ✅ Local play timers work with time control parameter
-      ✅ Online game timers integrated with backend APIs
+      🤖 BOT DIFFICULTY LEVELS:
+      ✅ Beginner difficulty: Shows "Stockfish Jr." in game
+      ✅ Casual difficulty: Shows "XBot Casual" in game  
+      ✅ Challenger difficulty: Shows "XBot Challenger" in game
+      ✅ All difficulty levels load games correctly
+      ✅ Bot names display properly in headers and turn indicators
       
-      🏛️ CHESS.COM STYLE LAYOUT:
-      ✅ Classical mode: 8x8 board with embedded coordinates (a-h, 1-8)
-      ✅ Artillery mode: 10x10 board with full coordinates (a-j, 1-10)
-      ✅ Captured pieces displayed above/below board
-      ✅ Side panels with game status and move history
-      ✅ Proper header navigation with game mode indicators
+      ⚪⚫ COLOR SELECTION:
+      ✅ Playing as White: Human moves first, bot responds
+      ✅ Playing as Black: Bot makes first move automatically
+      ✅ Turn management correct in both color scenarios
+      ✅ Board perspective and piece placement work properly
       
-      🌐 ONLINE FUNCTIONALITY:
-      ✅ Game creation with time controls via API
-      ✅ Waiting room with dark theme and proper UI elements
-      ✅ Join game flow working perfectly
-      ✅ Active game state with timer synchronization
-      ✅ Live connection status indicator
-      ✅ Resign functionality with confirmation dialog
-      ✅ Game not found page with proper error handling
+      🏹 ARTILLERY MODE (10x10):
+      ✅ Artillery mode vs bot loads correctly
+      ✅ 10x10 board confirmed (j1, j10, a10 squares present)
+      ✅ Game header shows "Artillery vs XBot Casual"
+      ✅ Artillery bot setup card displays properly
+      ✅ Bot functionality works on expanded 10x10 board
       
-      🎮 ADDITIONAL FEATURES VERIFIED:
-      ✅ All required data-testids present and functional
-      ✅ Board interaction (piece selection, move execution)
-      ✅ Turn management and game state updates  
-      ✅ Embedded coordinates in Chess.com style
-      ✅ Red theme legal move indicators
-      ✅ Flip board and new game controls
+      🏁 GAME OVER FLOW:
+      ✅ Resign button shows confirmation dialog
+      ✅ Confirm/Cancel resign buttons functional
+      ✅ Game over card displays after resignation
+      ✅ Proper result message: "XBot Casual wins by resignation"
+      ✅ Rematch functionality available
       
-      📊 BACKEND INTEGRATION:
-      ✅ Timer API endpoints working correctly
-      ✅ Game state management with time controls
-      ✅ MongoDB integration for persistent games
-      ✅ Realtime updates via Supabase
+      🎯 UI COMPONENTS & INTERACTION:
+      ✅ Interactive chess board with proper test IDs
+      ✅ Square selectors (e.g., square-e2, square-e4) working
+      ✅ Move history panel visible and accessible
+      ✅ Current turn indicator updates correctly
+      ✅ All required data-testids present for automation
+      ✅ Navigation between game modes seamless
       
-      🏆 SUMMARY: All Prompt 6 features (Red Theme UI, SVG Pieces, Timer System, Chess.com Layout) are fully implemented and working perfectly. The XChess application delivers an excellent user experience with modern design, proper theming, and robust functionality.
+      🔧 TECHNICAL VALIDATION:
+      ✅ Client-side bot engine working (no API calls needed)
+      ✅ Bot response delays: Beginner=400ms, Casual=600ms, Challenger=900ms
+      ✅ URL routing and parameter handling correct
+      ✅ Game state management and turn alternation
+      ✅ SVG chess pieces rendering properly
+      ✅ Red theme board colors maintained in bot games
+      
+      🏆 SUMMARY: The "Play vs Bot" feature is fully implemented and working perfectly across all difficulty levels, both game modes (Classical 8x8 and Artillery 10x10), and all color choices. The bot AI responds appropriately with realistic delays, the UI is polished with proper theming, and all user interactions function as expected. This is a complete and robust chess vs AI implementation.

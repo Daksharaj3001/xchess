@@ -228,7 +228,8 @@ export default function ModeSelectPage() {
                   <li>• Perfect for beginners</li>
                 </ul>
                 <div className="flex flex-col gap-2">
-                  <Button className="w-full bg-[#b94a4a] hover:bg-[#a03e3e] text-white" onClick={() => setShowOnlineSetup('v1_classical')} disabled={creating} data-testid="classical-play-online"><Globe className="w-4 h-4 mr-2" /> Play Online</Button>
+                  <Button className="w-full bg-[#b94a4a] hover:bg-[#a03e3e] text-white" onClick={() => { setShowOnlineSetup('v1_classical'); setShowBotSetup(null); }} disabled={creating} data-testid="classical-play-online"><Globe className="w-4 h-4 mr-2" /> Play Online</Button>
+                  <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white" onClick={() => { setShowBotSetup('v1_classical'); setShowOnlineSetup(null); }} data-testid="classical-play-bot"><Bot className="w-4 h-4 mr-2" /> Play vs Bot</Button>
                   <Link href="/play?mode=v1_classical"><Button variant="outline" className="w-full border-zinc-600 text-zinc-300 hover:bg-zinc-700 hover:text-white" data-testid="classical-play-local"><Users className="w-4 h-4 mr-2" /> Play Local</Button></Link>
                 </div>
               </CardContent>
@@ -248,7 +249,8 @@ export default function ModeSelectPage() {
                   <li>• Strategic depth++</li>
                 </ul>
                 <div className="flex flex-col gap-2">
-                  <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white" onClick={() => setShowOnlineSetup('v2_artillery')} disabled={creating} data-testid="artillery-play-online"><Globe className="w-4 h-4 mr-2" /> Play Online</Button>
+                  <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white" onClick={() => { setShowOnlineSetup('v2_artillery'); setShowBotSetup(null); }} disabled={creating} data-testid="artillery-play-online"><Globe className="w-4 h-4 mr-2" /> Play Online</Button>
+                  <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white" onClick={() => { setShowBotSetup('v2_artillery'); setShowOnlineSetup(null); }} data-testid="artillery-play-bot"><Bot className="w-4 h-4 mr-2" /> Play vs Bot</Button>
                   <Link href="/play?mode=v2_artillery"><Button variant="outline" className="w-full border-zinc-600 text-zinc-300 hover:bg-zinc-700 hover:text-white" data-testid="artillery-play-local"><Target className="w-4 h-4 mr-2" /> Play Local</Button></Link>
                 </div>
               </CardContent>
