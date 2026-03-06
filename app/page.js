@@ -7,14 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { trackPageView } from '@/lib/firebase/analytics'
 import Link from 'next/link'
-import { 
-  Swords, 
-  Puzzle, 
-  Users, 
-  Trophy,
-  Zap,
-  Target
-} from 'lucide-react'
+import { Swords, Puzzle, Users, Trophy, Zap, Target, Globe } from 'lucide-react'
 
 export default function HomePage() {
   const { isAuthenticated, loading, profile } = useAuth()
@@ -24,24 +17,24 @@ export default function HomePage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted">
+    <div className="min-h-screen bg-zinc-900 text-white">
       {/* Header */}
-      <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+      <header className="border-b border-zinc-800 bg-zinc-900/80 backdrop-blur-sm sticky top-0 z-50">
+        <div className="container mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-xl font-bold text-primary-foreground">X</span>
+            <div className="w-9 h-9 bg-[#b94a4a] rounded-lg flex items-center justify-center">
+              <span className="text-lg font-bold text-white">X</span>
             </div>
-            <span className="text-xl font-bold">XChess</span>
+            <span className="text-lg font-bold">XChess</span>
           </div>
           <nav className="hidden md:flex items-center gap-6">
-            <Link href="/play" className="text-sm font-medium hover:text-primary transition-colors">
+            <Link href="/play/select" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">
               Play
             </Link>
-            <Link href="/puzzles" className="text-sm font-medium hover:text-primary transition-colors">
+            <Link href="/puzzles" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">
               Puzzles
             </Link>
-            <Link href="/leaderboard" className="text-sm font-medium hover:text-primary transition-colors">
+            <Link href="/leaderboard" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">
               Leaderboard
             </Link>
           </nav>
@@ -49,13 +42,13 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* Hero Section */}
+      {/* Hero */}
       <section className="container mx-auto px-4 py-20">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-6">
-            Chess, <span className="text-primary">Reimagined</span>
+            Chess, <span className="text-[#e85555]">Reimagined</span>
           </h1>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-zinc-400 mb-8 max-w-2xl mx-auto">
             Experience chess with unique archer mechanics. 
             Strategic depth meets innovative gameplay on XChess.
           </p>
@@ -63,28 +56,28 @@ export default function HomePage() {
             {isAuthenticated ? (
               <>
                 <Link href="/play/select">
-                  <Button size="lg" className="h-12 px-8">
+                  <Button size="lg" className="h-12 px-8 bg-[#b94a4a] hover:bg-[#a03e3e] text-white">
                     <Swords className="w-5 h-5 mr-2" />
                     Play Now
                   </Button>
                 </Link>
-                <Link href="/puzzles">
-                  <Button size="lg" variant="outline" className="h-12 px-8">
-                    <Puzzle className="w-5 h-5 mr-2" />
-                    Solve Puzzles
+                <Link href="/play/select">
+                  <Button size="lg" variant="outline" className="h-12 px-8 border-zinc-600 text-zinc-300 hover:bg-zinc-800 hover:text-white">
+                    <Globe className="w-5 h-5 mr-2" />
+                    Challenge a Friend
                   </Button>
                 </Link>
               </>
             ) : (
               <>
-                <Link href="/auth/signup">
-                  <Button size="lg" className="h-12 px-8">
-                    <Zap className="w-5 h-5 mr-2" />
-                    Get Started Free
+                <Link href="/play/select">
+                  <Button size="lg" className="h-12 px-8 bg-[#b94a4a] hover:bg-[#a03e3e] text-white">
+                    <Swords className="w-5 h-5 mr-2" />
+                    Play Now
                   </Button>
                 </Link>
                 <Link href="/auth/login">
-                  <Button size="lg" variant="outline" className="h-12 px-8">
+                  <Button size="lg" variant="outline" className="h-12 px-8 border-zinc-600 text-zinc-300 hover:bg-zinc-800 hover:text-white">
                     Sign In
                   </Button>
                 </Link>
@@ -94,120 +87,121 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section className="container mx-auto px-4 py-16">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card className="border-2 hover:border-primary/50 transition-colors">
+      {/* Features */}
+      <section className="container mx-auto px-4 py-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <Card className="bg-zinc-800 border-zinc-700 hover:border-[#b94a4a]/50 transition-colors">
             <CardHeader>
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <Target className="w-6 h-6 text-primary" />
+              <div className="w-10 h-10 bg-[#b94a4a]/15 rounded-lg flex items-center justify-center mb-2">
+                <Target className="w-5 h-5 text-[#b94a4a]" />
               </div>
-              <CardTitle>Archer Mechanics</CardTitle>
-              <CardDescription>
-                Unique archer pieces that can fire across the board. 
-                Master new strategies and outplay your opponents.
+              <CardTitle className="text-white text-base">Archer Mechanics</CardTitle>
+              <CardDescription className="text-zinc-400 text-sm">
+                Unique archer pieces that fire across the board. Master new strategies.
               </CardDescription>
             </CardHeader>
           </Card>
 
-          <Card className="border-2 hover:border-primary/50 transition-colors">
+          <Card className="bg-zinc-800 border-zinc-700 hover:border-[#b94a4a]/50 transition-colors">
             <CardHeader>
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <Users className="w-6 h-6 text-primary" />
+              <div className="w-10 h-10 bg-[#b94a4a]/15 rounded-lg flex items-center justify-center mb-2">
+                <Users className="w-5 h-5 text-[#b94a4a]" />
               </div>
-              <CardTitle>Matchmaking</CardTitle>
-              <CardDescription>
-                Find opponents at your skill level. 
-                Fair and competitive matches powered by ELO ratings.
+              <CardTitle className="text-white text-base">Online Multiplayer</CardTitle>
+              <CardDescription className="text-zinc-400 text-sm">
+                Challenge friends with shareable links. Real-time moves with Supabase.
               </CardDescription>
             </CardHeader>
           </Card>
 
-          <Card className="border-2 hover:border-primary/50 transition-colors">
+          <Card className="bg-zinc-800 border-zinc-700 hover:border-[#b94a4a]/50 transition-colors">
             <CardHeader>
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <Puzzle className="w-6 h-6 text-primary" />
+              <div className="w-10 h-10 bg-[#b94a4a]/15 rounded-lg flex items-center justify-center mb-2">
+                <Zap className="w-5 h-5 text-[#b94a4a]" />
               </div>
-              <CardTitle>Puzzles</CardTitle>
-              <CardDescription>
-                Train your tactical vision with XChess-specific puzzles. 
-                From easy to extreme difficulty.
+              <CardTitle className="text-white text-base">Time Controls</CardTitle>
+              <CardDescription className="text-zinc-400 text-sm">
+                Bullet, Blitz, Rapid, and Classical. Server-synced chess clocks.
               </CardDescription>
             </CardHeader>
           </Card>
 
-          <Card className="border-2 hover:border-primary/50 transition-colors">
+          <Card className="bg-zinc-800 border-zinc-700 hover:border-[#b94a4a]/50 transition-colors">
             <CardHeader>
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <Trophy className="w-6 h-6 text-primary" />
+              <div className="w-10 h-10 bg-[#b94a4a]/15 rounded-lg flex items-center justify-center mb-2">
+                <Swords className="w-5 h-5 text-[#b94a4a]" />
               </div>
-              <CardTitle>Leaderboards</CardTitle>
-              <CardDescription>
-                Climb the ranks and compete for top positions. 
-                Track your progress over time.
+              <CardTitle className="text-white text-base">Two Game Modes</CardTitle>
+              <CardDescription className="text-zinc-400 text-sm">
+                Classical 8x8 or Artillery 10x10 with archers. Play local or online.
               </CardDescription>
             </CardHeader>
           </Card>
 
-          <Card className="border-2 hover:border-primary/50 transition-colors">
+          <Card className="bg-zinc-800 border-zinc-700 hover:border-[#b94a4a]/50 transition-colors">
             <CardHeader>
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <Zap className="w-6 h-6 text-primary" />
+              <div className="w-10 h-10 bg-[#b94a4a]/15 rounded-lg flex items-center justify-center mb-2">
+                <Trophy className="w-5 h-5 text-[#b94a4a]" />
               </div>
-              <CardTitle>Real-time Games</CardTitle>
-              <CardDescription>
-                Instant move synchronization with Supabase Realtime. 
-                Smooth, lag-free gameplay.
+              <CardTitle className="text-white text-base">Leaderboards</CardTitle>
+              <CardDescription className="text-zinc-400 text-sm">
+                Climb the ranks and compete for top positions. ELO ratings.
               </CardDescription>
             </CardHeader>
           </Card>
 
-          <Card className="border-2 hover:border-primary/50 transition-colors">
+          <Card className="bg-zinc-800 border-zinc-700 hover:border-[#b94a4a]/50 transition-colors">
             <CardHeader>
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <Swords className="w-6 h-6 text-primary" />
+              <div className="w-10 h-10 bg-[#b94a4a]/15 rounded-lg flex items-center justify-center mb-2">
+                <Puzzle className="w-5 h-5 text-[#b94a4a]" />
               </div>
-              <CardTitle>Multiple Modes</CardTitle>
-              <CardDescription>
-                Play online, vs AI, or analyze positions. 
-                Choose your preferred time control.
+              <CardTitle className="text-white text-base">Puzzles</CardTitle>
+              <CardDescription className="text-zinc-400 text-sm">
+                Train tactical vision with XChess puzzles. Easy to extreme.
               </CardDescription>
             </CardHeader>
           </Card>
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* CTA */}
       {!isAuthenticated && (
-        <section className="container mx-auto px-4 py-16">
-          <Card className="bg-primary text-primary-foreground">
-            <CardContent className="py-12 text-center">
-              <h2 className="text-3xl font-bold mb-4">Ready to Play?</h2>
-              <p className="text-primary-foreground/80 mb-6 max-w-md mx-auto">
-                Join thousands of players experiencing chess in a whole new way.
+        <section className="container mx-auto px-4 py-12">
+          <Card className="bg-[#b94a4a] border-[#a03e3e]">
+            <CardContent className="py-10 text-center">
+              <h2 className="text-2xl font-bold mb-3 text-white">Ready to Play?</h2>
+              <p className="text-white/70 mb-6 max-w-md mx-auto text-sm">
+                Jump right in — no account needed for local play.
               </p>
-              <Link href="/auth/signup">
-                <Button size="lg" variant="secondary" className="h-12 px-8">
-                  Create Free Account
-                </Button>
-              </Link>
+              <div className="flex gap-3 justify-center">
+                <Link href="/play/select">
+                  <Button size="lg" className="h-11 px-8 bg-white text-[#b94a4a] hover:bg-zinc-100">
+                    Start Playing
+                  </Button>
+                </Link>
+                <Link href="/auth/signup">
+                  <Button size="lg" variant="outline" className="h-11 px-8 border-white/40 text-white hover:bg-white/10">
+                    Create Account
+                  </Button>
+                </Link>
+              </div>
             </CardContent>
           </Card>
         </section>
       )}
 
       {/* Footer */}
-      <footer className="border-t bg-muted/50">
-        <div className="container mx-auto px-4 py-8">
+      <footer className="border-t border-zinc-800">
+        <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-sm font-bold text-primary-foreground">X</span>
+              <div className="w-7 h-7 bg-[#b94a4a] rounded-lg flex items-center justify-center">
+                <span className="text-xs font-bold text-white">X</span>
               </div>
-              <span className="font-semibold">XChess</span>
+              <span className="font-semibold text-sm">XChess</span>
             </div>
-            <p className="text-sm text-muted-foreground">
-              Built with Supabase & Firebase
+            <p className="text-xs text-zinc-500">
+              Built with Next.js, Supabase & Firebase
             </p>
           </div>
         </div>
