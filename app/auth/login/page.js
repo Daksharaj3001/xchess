@@ -62,12 +62,10 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-zinc-900 p-4">
       <Card className="w-full max-w-md shadow-xl bg-zinc-800 border-zinc-700">
         <CardHeader className="text-center">
-          <div className="w-14 h-14 bg-[#b94a4a] rounded-xl flex items-center justify-center mx-auto mb-4">
-            <span className="text-2xl font-bold text-white">X</span>
-          </div>
+          <img src="/xchess-logo.png" alt="XChess" className="w-14 h-14 rounded-xl object-cover mx-auto mb-4" />
           <CardTitle className="text-xl text-white">Welcome to XChess</CardTitle>
           <CardDescription className="text-zinc-400">
-            Sign in to continue playing
+            Experience chess with unique mechanics
           </CardDescription>
         </CardHeader>
 

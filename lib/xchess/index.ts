@@ -96,6 +96,10 @@ export {
 export { getBotMove } from './bot';
 export type { BotDifficulty, BotMoveResult } from './bot';
 
+// Post-game analysis
+export { analyzeGame } from './analysis';
+export type { PostGameInsight, AnalyzedMove } from './analysis';
+
 // Re-export types from replay
 export type { StoredMove, ReplayState } from './replay';
 

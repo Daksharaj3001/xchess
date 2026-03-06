@@ -15,6 +15,7 @@ import ChessTimer from '@/components/game/ChessTimer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import PostGameAnalysis from '@/components/game/PostGameAnalysis';
 import type { GameState, LegalMove, Position, PieceType, PieceColor } from '@/lib/xchess/types';
 import {
   ArrowLeft, Copy, Check, Loader2, Swords, Target, Flag,
@@ -450,6 +451,10 @@ export default function OnlineGamePage() {
             <div data-testid="online-move-history">
               <MoveHistory moves={gameState.moveHistory} maxHeight="250px" />
             </div>
+
+            {isGameOver && gameState.moveHistory.length >= 2 && (
+              <PostGameAnalysis gameState={gameState} humanColor={playerColor || undefined} />
+            )}
 
             {!isGameOver && playerColor && (
               <div className="flex gap-2">

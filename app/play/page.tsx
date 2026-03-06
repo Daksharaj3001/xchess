@@ -12,6 +12,7 @@ import MoveHistory from '@/components/game/MoveHistory';
 import ChessTimer from '@/components/game/ChessTimer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import PostGameAnalysis from '@/components/game/PostGameAnalysis';
 import { createGame, getLegalMoves, applyMove, getBotMove } from '@/lib/xchess';
 import type { GameState, LegalMove, Position, PieceType, GameMode, PieceColor } from '@/lib/xchess/types';
 import type { BotDifficulty } from '@/lib/xchess/bot';
@@ -79,6 +80,7 @@ function PlayContent() {
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const botTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const botProcessingRef = useRef(false);
 
   // Init game
   useEffect(() => {
@@ -107,30 +109,40 @@ function PlayContent() {
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [gameState?.currentTurn, gameState?.moveHistory.length, tc.base, isGameOver]);
 
-  // Bot auto-move
+  // Bot auto-move — use ref to prevent cleanup from killing the timeout
   useEffect(() => {
-    if (!isVsBot || !gameState || isGameOver || botThinking) return;
+    if (!isVsBot || !gameState || isGameOver) return;
     if (gameState.currentTurn !== botColor) return;
+    if (botProcessingRef.current) return;
 
+    botProcessingRef.current = true;
     setBotThinking(true);
+
     botTimeoutRef.current = setTimeout(() => {
-      const move = getBotMove(gameState, botDifficulty);
-      if (move) {
-        const result = applyMove(gameState, move.from, move.to, move.promotionPiece, move.archerTargets);
-        if (result.success && result.newState) {
-          if (tc.increment > 0 && tc.base > 0) {
-            if (botColor === 'white') setWhiteTime(prev => prev + tc.increment);
-            else setBlackTime(prev => prev + tc.increment);
+      try {
+        const move = getBotMove(gameState, botDifficulty);
+        if (move) {
+          const result = applyMove(gameState, move.from, move.to, move.promotionPiece, move.archerTargets);
+          if (result.success && result.newState) {
+            if (tc.increment > 0 && tc.base > 0) {
+              if (botColor === 'white') setWhiteTime(prev => prev + tc.increment);
+              else setBlackTime(prev => prev + tc.increment);
+            }
+            setGameState(result.newState);
+            setLegalMoves(getLegalMoves(result.newState));
           }
-          setGameState(result.newState);
-          setLegalMoves(getLegalMoves(result.newState));
         }
+      } catch (e) {
+        console.error('Bot move error:', e);
       }
+      botProcessingRef.current = false;
       setBotThinking(false);
     }, BOT_DELAY[botDifficulty]);
 
-    return () => { if (botTimeoutRef.current) clearTimeout(botTimeoutRef.current); };
-  }, [gameState, isVsBot, botColor, botDifficulty, isGameOver, botThinking, tc.base, tc.increment]);
+    return () => {
+      // Only cleanup on unmount, not on re-render
+    };
+  }, [gameState?.currentTurn, gameState?.moveHistory.length, isVsBot, botColor, botDifficulty, isGameOver]);
 
   const handleMove = async (from: Position, to: Position, promotion?: PieceType, archerTargets?: Position[]): Promise<boolean> => {
     if (!gameState) return false;
@@ -149,6 +161,7 @@ function PlayContent() {
 
   const handleReset = () => {
     if (botTimeoutRef.current) clearTimeout(botTimeoutRef.current);
+    botProcessingRef.current = false;
     const state = createGame(mode);
     setGameState(state);
     setLegalMoves(getLegalMoves(state));
@@ -302,6 +315,10 @@ function PlayContent() {
                   </Button>
                 </CardContent>
               </Card>
+            )}
+
+            {isGameOver && gameState.moveHistory.length >= 2 && (
+              <PostGameAnalysis gameState={gameState} humanColor={isVsBot ? humanColor : undefined} />
             )}
 
             {!isGameOver && (

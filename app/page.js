@@ -22,9 +22,7 @@ export default function HomePage() {
       <header className="border-b border-zinc-800 bg-zinc-900/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-[#b94a4a] rounded-lg flex items-center justify-center">
-              <span className="text-lg font-bold text-white">X</span>
-            </div>
+            <img src="/xchess-logo.png" alt="XChess" className="w-9 h-9 rounded-lg object-cover" />
             <span className="text-lg font-bold">XChess</span>
           </div>
           <nav className="hidden md:flex items-center gap-6">
@@ -49,8 +47,7 @@ export default function HomePage() {
             Chess, <span className="text-[#e85555]">Reimagined</span>
           </h1>
           <p className="text-lg text-zinc-400 mb-8 max-w-2xl mx-auto">
-            Experience chess with unique archer mechanics. 
-            Strategic depth meets innovative gameplay on XChess.
+            Experience chess with unique mechanics
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             {isAuthenticated ? (
@@ -195,9 +192,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 bg-[#b94a4a] rounded-lg flex items-center justify-center">
-                <span className="text-xs font-bold text-white">X</span>
-              </div>
+              <img src="/xchess-logo.png" alt="XChess" className="w-7 h-7 rounded-lg object-cover" />
               <span className="font-semibold text-sm">XChess</span>
             </div>
             <p className="text-xs text-zinc-500">
