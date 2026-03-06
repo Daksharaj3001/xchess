@@ -6,10 +6,10 @@ Build a full-stack web application called "XChess" — a chess platform with uni
 ## What's Been Implemented
 
 ### Prompt 0 — Architecture & Auth
-- [x] Project structure, Supabase/Firebase initialization, full auth flow (email/password, Google OAuth)
+- [x] Project structure, Supabase/Firebase initialization, full auth flow
 
 ### Prompt 1 — Database Schema & RLS
-- [x] All Supabase tables and RLS policies via SQL migration files
+- [x] All Supabase tables and RLS policies via SQL migrations
 
 ### Prompt 2 — Rules Engine
 - [x] Server-authoritative game logic, 34 automated tests
@@ -18,39 +18,48 @@ Build a full-stack web application called "XChess" — a chess platform with uni
 - [x] State serialization, reconstruction, 29 automated tests
 
 ### Prompt 4 — Board UI
-- [x] Interactive 8x8 and 10x10 boards, piece selection, drag-and-drop, Archer targeting, promotion, check/checkmate indicators, hot-seat local play
+- [x] Interactive 8x8 and 10x10 boards, piece interaction, Archer targeting, hot-seat local play
 
-### Prompt 5 — Realtime Multiplayer (March 2026)
-- [x] **Backend API routes**: POST /api/multiplayer/games (create), GET /api/multiplayer/games/[gameId] (state), POST .../join, POST .../moves, POST .../resign
-- [x] **MongoDB persistence**: Game state stored and updated atomically with move validation
-- [x] **Supabase Realtime Broadcast**: Instant move delivery between players via channel `game-{gameId}`
-- [x] **Reconnection logic**: On reconnect, client fetches latest state from API; desync detected via move number mismatch (409 response triggers re-fetch)
-- [x] **Chess.com-style game creation**: Name input, color choice (White/Black/Random), shareable challenge link
-- [x] **Waiting room**: Spinner, share link, polling for opponent join
-- [x] **Join screen**: Opponent sees invite details, enters name, clicks Play
-- [x] **Active game UI**: Player/opponent info bars, "Your turn"/"Thinking..." badges, Live connection indicator, resign flow with confirmation
-- [x] **Game over**: Result banner, "New Game" button
+### Prompt 5 — Realtime Multiplayer
+- [x] Full multiplayer: game creation, joining, server-validated moves, Supabase Realtime broadcast, reconnection, resign
+
+### Prompt 6 — Timers + Chess.com Red Theme (March 2026)
+- [x] **Red Theme Board**: Light #f3d9d9 / Dark #b94a4a, Selected #ff4d4d, Legal moves #ff6b6b, Check #ff0000
+- [x] **SVG Chess Pieces**: Inline SVG for all pieces (King, Queen, Rook, Bishop, Knight, Pawn, Archer)
+- [x] **Chess.com-Style Layout**: Dark zinc background, board left/center, side panel (timers, move history, resign), embedded coordinates
+- [x] **Timer System**: Bullet (1min, 2+1), Blitz (3min, 5min, 5+3), Rapid (10min, 15+10), Classical (30min)
+  - Server-synced time deduction + increment on each move
+  - Client-side countdown for smooth display
+  - Active clock highlighted in red, inactive in dark
+  - Low-time warning when <10s (pulse animation)
+  - Timeout = opponent wins
+- [x] **Time Control Picker**: Chess.com-style category selector in game creation
+- [x] **Firebase Analytics**: timer_started, timer_low_warning, timeout_win, move_history_opened, board_theme_loaded
+- [x] **Mobile Responsive**: Board centered, side panel collapses below, timers always visible
 
 ### Key Files
+- `/components/game/ChessPieceSVG.tsx` — SVG piece components
+- `/components/game/ChessTimer.tsx` — Timer display component  
+- `/components/game/InteractiveBoard.tsx` — Red theme board with SVG pieces
+- `/app/play/page.tsx` — Local play (chess.com layout)
+- `/app/game/[gameId]/page.tsx` — Online play (chess.com layout + timers)
+- `/app/play/select/page.tsx` — Mode selection with time controls
+- `/app/api/multiplayer/games/` — API routes with timer logic
 - `/lib/mongodb.ts` — MongoDB singleton
-- `/app/api/multiplayer/games/` — All multiplayer API routes
-- `/app/game/[gameId]/page.tsx` — Online game page (waiting room → active → completed)
-- `/app/play/select/page.tsx` — Mode selection with Play Online / Play Local
-- `/components/game/InteractiveBoard.tsx` — Interactive chess board
 - `/lib/xchess/` — Rules engine, types, analytics
 
 ## Tech Stack
-- **Frontend**: Next.js 14 (App Router), React, TypeScript, Tailwind CSS, Shadcn/UI
-- **Backend**: Next.js API Routes, MongoDB (game persistence), Supabase (Auth, Realtime Broadcast)
+- **Frontend**: Next.js 14, React, TypeScript, Tailwind CSS, Shadcn/UI
+- **Backend**: Next.js API Routes, MongoDB, Supabase (Auth, Realtime)
 - **Analytics**: Firebase Analytics
-- **Tests**: 63 backend tests passing (engine + replay)
+- **Tests**: 63 backend tests passing
 
 ## Prioritized Backlog
 
 ### P1 (High)
 - Matchmaking queue (random opponent pairing)
 - Game replay viewer page
-- Time controls
+- Draw offer system
 
 ### P2 (Medium)
 - Puzzles page
@@ -62,4 +71,4 @@ Build a full-stack web application called "XChess" — a chess platform with uni
 - AI opponent
 - Game analysis
 - Spectator mode
-- Mobile optimization
+- Sound effects
