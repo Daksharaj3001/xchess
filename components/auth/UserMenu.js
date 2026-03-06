@@ -74,12 +74,6 @@ export function UserMenu() {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/leaderboard" className="cursor-pointer">
-            <Trophy className="mr-2 h-4 w-4" />
-            Leaderboard
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
           <Link href="/settings" className="cursor-pointer">
             <Settings className="mr-2 h-4 w-4" />
             Settings

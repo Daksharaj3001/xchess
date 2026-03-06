@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { trackPageView } from '@/lib/firebase/analytics'
 import Link from 'next/link'
-import { Swords, Puzzle, Users, Trophy, Zap, Target, Globe } from 'lucide-react'
+import { Swords, Users, Zap, Target, Globe } from 'lucide-react'
 
 export default function HomePage() {
   const { isAuthenticated, loading, profile } = useAuth()
@@ -28,12 +28,6 @@ export default function HomePage() {
           <nav className="hidden md:flex items-center gap-6">
             <Link href="/play/select" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">
               Play
-            </Link>
-            <Link href="/puzzles" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">
-              Puzzles
-            </Link>
-            <Link href="/leaderboard" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">
-              Leaderboard
             </Link>
           </nav>
           <UserMenu />
@@ -135,29 +129,6 @@ export default function HomePage() {
             </CardHeader>
           </Card>
 
-          <Card className="bg-zinc-800 border-zinc-700 hover:border-[#b94a4a]/50 transition-colors">
-            <CardHeader>
-              <div className="w-10 h-10 bg-[#b94a4a]/15 rounded-lg flex items-center justify-center mb-2">
-                <Trophy className="w-5 h-5 text-[#b94a4a]" />
-              </div>
-              <CardTitle className="text-white text-base">Leaderboards</CardTitle>
-              <CardDescription className="text-zinc-400 text-sm">
-                Climb the ranks and compete for top positions. ELO ratings.
-              </CardDescription>
-            </CardHeader>
-          </Card>
-
-          <Card className="bg-zinc-800 border-zinc-700 hover:border-[#b94a4a]/50 transition-colors">
-            <CardHeader>
-              <div className="w-10 h-10 bg-[#b94a4a]/15 rounded-lg flex items-center justify-center mb-2">
-                <Puzzle className="w-5 h-5 text-[#b94a4a]" />
-              </div>
-              <CardTitle className="text-white text-base">Puzzles</CardTitle>
-              <CardDescription className="text-zinc-400 text-sm">
-                Train tactical vision with XChess puzzles. Easy to extreme.
-              </CardDescription>
-            </CardHeader>
-          </Card>
         </div>
       </section>
 

@@ -3,7 +3,7 @@ import { AuthProvider } from '@/contexts/AuthContext'
 
 export const metadata = {
   title: 'XChess - Play Chess Online',
-  description: 'XChess platform with archer mechanics, puzzles, and competitive play',
+  description: 'XChess platform with archer mechanics and competitive play',
 }
 
 export default function RootLayout({ children }) {
