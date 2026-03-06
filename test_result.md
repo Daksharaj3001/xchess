@@ -103,7 +103,7 @@
 #====================================================================================================
 
 user_problem_statement: |
-  Test the XChess app at https://xchess-board.preview.emergentagent.com with the new Prompt 6 features: 
+  Test the XChess app at https://xchess-bot-play.preview.emergentagent.com with the new Prompt 6 features: 
   Red Theme UI, SVG pieces, Timer system, Chess.com-style layout.
 
 frontend:

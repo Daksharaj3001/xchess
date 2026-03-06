@@ -10,9 +10,10 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { ArrowLeft, Swords, Target, Users, Globe, Loader2, Shuffle, Clock } from 'lucide-react';
+import { ArrowLeft, Swords, Target, Users, Globe, Loader2, Shuffle, Clock, Bot } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { GameMode } from '@/lib/xchess/types';
+import type { BotDifficulty } from '@/lib/xchess/bot';
 
 type ColorChoice = 'white' | 'black' | 'random';
 
@@ -41,9 +42,11 @@ export default function ModeSelectPage() {
   const router = useRouter();
   const [creating, setCreating] = useState(false);
   const [showOnlineSetup, setShowOnlineSetup] = useState<GameMode | null>(null);
+  const [showBotSetup, setShowBotSetup] = useState<GameMode | null>(null);
   const [playerName, setPlayerName] = useState('');
   const [colorChoice, setColorChoice] = useState<ColorChoice>('white');
   const [selectedTC, setSelectedTC] = useState<string>('blitz_5');
+  const [botDifficulty, setBotDifficulty] = useState<BotDifficulty>('casual');
 
   const handleCreateOnline = async (mode: GameMode) => {
     setCreating(true);
@@ -150,6 +153,61 @@ export default function ModeSelectPage() {
                     {creating ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Creating...</> : <><Globe className="w-4 h-4 mr-2" /> Create Game</>}
                   </Button>
                   <Button variant="ghost" onClick={() => setShowOnlineSetup(null)} className="text-zinc-400 hover:text-white" data-testid="cancel-setup-button">Cancel</Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Bot setup */}
+          {showBotSetup && (
+            <Card className="mb-6 bg-zinc-800 border-purple-500/40" data-testid="bot-setup-card">
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center gap-2 text-white">
+                  <Bot className="w-5 h-5 text-purple-400" />
+                  Play vs Bot — {showBotSetup === 'v2_artillery' ? 'Artillery' : 'Classical'}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Difficulty */}
+                <div>
+                  <label className="text-sm font-medium mb-2 block text-zinc-300">Difficulty</label>
+                  <div className="flex gap-2" data-testid="difficulty-picker">
+                    {([
+                      { key: 'beginner' as BotDifficulty, label: 'Beginner', desc: 'Random moves' },
+                      { key: 'casual' as BotDifficulty, label: 'Casual', desc: 'Decent play' },
+                      { key: 'challenger' as BotDifficulty, label: 'Challenger', desc: 'Tough opponent' },
+                    ]).map(d => (
+                      <button key={d.key} onClick={() => setBotDifficulty(d.key)} data-testid={`diff-${d.key}`}
+                        className={cn('flex-1 py-2.5 px-2 rounded-lg border-2 transition-all text-center',
+                          botDifficulty === d.key ? 'border-purple-500 bg-purple-500/10' : 'border-zinc-700 hover:border-zinc-500')}>
+                        <div className={cn('text-sm font-medium', botDifficulty === d.key ? 'text-purple-300' : 'text-zinc-300')}>{d.label}</div>
+                        <div className="text-[10px] text-zinc-500">{d.desc}</div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Color choice */}
+                <div>
+                  <label className="text-sm font-medium mb-2 block text-zinc-300">Play as</label>
+                  <div className="flex gap-2" data-testid="bot-color-choice">
+                    {colorOptions.map(opt => (
+                      <button key={opt.value} onClick={() => setColorChoice(opt.value)} data-testid={`bot-color-${opt.value}`}
+                        className={cn('flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg border-2 transition-all text-sm font-medium',
+                          colorChoice === opt.value ? 'border-purple-500 bg-purple-500/10 text-purple-300' : 'border-zinc-700 text-zinc-400 hover:border-zinc-500')}>
+                        {opt.icon} {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex gap-3 pt-1">
+                  <Link href={`/play?mode=${showBotSetup}&bot=${botDifficulty}&color=${colorChoice === 'random' ? (Math.random() < 0.5 ? 'white' : 'black') : colorChoice}`} className="flex-1">
+                    <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white" data-testid="start-bot-game">
+                      <Bot className="w-4 h-4 mr-2" /> Start Game
+                    </Button>
+                  </Link>
+                  <Button variant="ghost" onClick={() => setShowBotSetup(null)} className="text-zinc-400 hover:text-white" data-testid="cancel-bot-setup">Cancel</Button>
                 </div>
               </CardContent>
             </Card>

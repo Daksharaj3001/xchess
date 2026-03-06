@@ -92,6 +92,10 @@ export {
   applyMoveToGame,
 } from './state';
 
+// Bot engine
+export { getBotMove } from './bot';
+export type { BotDifficulty, BotMoveResult } from './bot';
+
 // Re-export types from replay
 export type { StoredMove, ReplayState } from './replay';
 
