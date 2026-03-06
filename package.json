@@ -62,13 +62,14 @@
         "sonner": "^2.0.5",
         "tailwind-merge": "^3.3.1",
         "tailwindcss-animate": "^1.0.7",
-        "uuid": "^9.0.1",
+        "uuid": "^13.0.0",
         "vaul": "^1.1.2",
         "zod": "^3.25.67"
     },
     "devDependencies": {
         "@types/node": "^25.3.3",
         "@types/react": "^19.2.14",
+        "@types/uuid": "^11.0.0",
         "autoprefixer": "^10.4.19",
         "globals": "^16.2.0",
         "postcss": "^8",
