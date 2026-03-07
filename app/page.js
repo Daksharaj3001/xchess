@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { trackPageView } from '@/lib/firebase/analytics'
 import Link from 'next/link'
-import { Swords, Users, Zap, Target, Globe } from 'lucide-react'
+import { Swords, Zap, Target, Globe } from 'lucide-react'
 
 export default function HomePage() {
   const { isAuthenticated, loading, profile } = useAuth()
@@ -96,18 +96,6 @@ export default function HomePage() {
           <Card className="bg-zinc-800 border-zinc-700 hover:border-[#b94a4a]/50 transition-colors">
             <CardHeader>
               <div className="w-10 h-10 bg-[#b94a4a]/15 rounded-lg flex items-center justify-center mb-2">
-                <Users className="w-5 h-5 text-[#b94a4a]" />
-              </div>
-              <CardTitle className="text-white text-base">Online Multiplayer</CardTitle>
-              <CardDescription className="text-zinc-400 text-sm">
-                Challenge friends with shareable links. Real-time moves with Supabase.
-              </CardDescription>
-            </CardHeader>
-          </Card>
-
-          <Card className="bg-zinc-800 border-zinc-700 hover:border-[#b94a4a]/50 transition-colors">
-            <CardHeader>
-              <div className="w-10 h-10 bg-[#b94a4a]/15 rounded-lg flex items-center justify-center mb-2">
                 <Zap className="w-5 h-5 text-[#b94a4a]" />
               </div>
               <CardTitle className="text-white text-base">Time Controls</CardTitle>
@@ -124,7 +112,7 @@ export default function HomePage() {
               </div>
               <CardTitle className="text-white text-base">Two Game Modes</CardTitle>
               <CardDescription className="text-zinc-400 text-sm">
-                Classical 8x8 or Artillery 10x10 with archers. Play local or online.
+                Classical 8x8 or Artillery 10x10 with archers. Play locally or vs AI.
               </CardDescription>
             </CardHeader>
           </Card>

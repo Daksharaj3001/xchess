@@ -103,7 +103,7 @@
 #====================================================================================================
 
 user_problem_statement: |
-  Test the XChess "Play vs Bot" feature on https://xchess-bot-play.preview.emergentagent.com
+  Test the XChess "Play vs Bot" feature on https://xchess-play.preview.emergentagent.com
 
   The app is a chess platform built with Next.js. The "Play vs Bot" feature allows users to play against an AI opponent with three difficulty levels (Beginner, Casual, Challenger) in both Classical (8x8) and Artillery (10x10) modes.
 

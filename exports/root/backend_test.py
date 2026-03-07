@@ -11,7 +11,7 @@ import os
 from urllib.parse import urljoin
 
 # Get base URL from environment
-BASE_URL = "https://xchess-bot-play.preview.emergentagent.com"
+BASE_URL = "https://xchess-play.preview.emergentagent.com"
 API_BASE = f"{BASE_URL}/api"
 
 def test_health_check():
