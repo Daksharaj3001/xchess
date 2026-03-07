@@ -198,33 +198,14 @@ export function AuthProvider({ children }) {
         ? `${window.location.origin}/auth/callback`
         : undefined
 
-      // Use skipBrowserRedirect to catch errors before redirecting
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: redirectUrl,
-          skipBrowserRedirect: true,
         },
       })
 
       if (error) throw error
-
-      // Verify the URL is valid before redirecting
-      if (data?.url) {
-        // Check if the URL points to a valid OAuth flow
-        try {
-          const testResp = await fetch(data.url, { method: 'HEAD', redirect: 'manual' })
-          // Supabase returns 302 for valid OAuth, 400 for disabled provider
-          if (testResp.status >= 400) {
-            throw new Error('Google sign-in is not configured. Please enable Google OAuth in your Supabase dashboard (Authentication → Providers → Google).')
-          }
-        } catch (fetchErr) {
-          // If it's our custom error, throw it. Otherwise CORS blocked = normal OAuth redirect
-          if (fetchErr.message.includes('not configured')) throw fetchErr
-        }
-        // Redirect to OAuth
-        window.location.href = data.url
-      }
 
       return { data, error: null }
     } catch (err) {

@@ -6,7 +6,7 @@ Build a full-stack web application called "XChess" — a chess platform with uni
 ## What's Been Implemented
 
 ### Prompt 0 — Architecture & Auth
-- [x] Project structure, Supabase/Firebase initialization, full auth flow
+- [x] Project structure, Supabase/Firebase initialization, full auth flow (email/password + Google OAuth)
 
 ### Prompt 1 — Database Schema & RLS
 - [x] All Supabase tables and RLS policies via SQL migrations
@@ -27,45 +27,36 @@ Build a full-stack web application called "XChess" — a chess platform with uni
 - [x] Red themed board, SVG pieces, chess.com-style layout, timer system (Bullet/Blitz/Rapid/Classical)
 
 ### Prompt 10 — Bot Players (March 2026)
-- [x] **Bot Engine** (`/lib/xchess/bot.ts`): Three difficulty levels (Beginner, Casual, Challenger with minimax)
-- [x] **Bot Setup UI**: Purple-themed setup card with difficulty/color pickers
-- [x] **Bot Game Integration**: Auto-move with per-difficulty delays, thinking indicator
-- [x] **Bug Fix**: Fixed bot stuck at "thinking" — replaced state-based guard with ref-based guard in useEffect
-- [x] All modes (Classical 8x8, Artillery 10x10) work with bot
+- [x] Bot Engine with 3 difficulty levels (Beginner, Casual, Challenger)
+- [x] Bot Setup UI, Auto-move integration, Game over flow
 
 ### Post-Game Analysis & Coaching (March 2026)
-- [x] **Analysis Engine** (`/lib/xchess/analysis.ts`): Heuristic evaluation replaying all moves
-- [x] **PostGameAnalysis Component**: Shows after every game (local, bot, online)
-  - Best Move: Highlights the strongest play with eval gain
-  - Biggest Mistake: Shows the worst blunder with better alternative
-  - Turning Point: Identifies the moment that shifted the game
-- [x] Collapsible card with color-coded sections (green/red/blue)
+- [x] Heuristic analysis: Best Move, Biggest Mistake, Turning Point
+- [x] Collapsible analysis card on local, bot, and online game pages
 
-### UI Updates (March 2026)
-- [x] XChess logo integrated on homepage header, footer, login page, signup page
-- [x] Homepage description: "Experience chess with unique mechanics"
-- [x] Login page description: "Experience chess with unique mechanics"
-
-### Key Files
-- `/lib/xchess/bot.ts` — Bot engine with 3 difficulty levels
-- `/lib/xchess/analysis.ts` — Post-game heuristic analysis
-- `/components/game/PostGameAnalysis.tsx` — Analysis UI component
-- `/components/game/ChessPieceSVG.tsx` — SVG piece components
-- `/components/game/ChessTimer.tsx` — Timer display component
-- `/components/game/InteractiveBoard.tsx` — Red theme board with SVG pieces
-- `/app/play/page.tsx` — Local/Bot play with analysis
-- `/app/game/[gameId]/page.tsx` — Online play with analysis
-- `/app/play/select/page.tsx` — Mode selection with bot setup
-- `/public/xchess-logo.png` — App logo
+### Production Readiness (March 2026)
+- [x] **Build passes** — zero TypeScript errors, zero build blockers
+- [x] **Google OAuth fixed** — removed defensive HEAD request check, now redirects directly
+- [x] **UI components typed** — card, button, input, scroll-area, slider, badge, avatar converted to .tsx with proper types
+- [x] **tsconfig updated** — downlevelIteration enabled, exports dir excluded
+- [x] **next.config.js cleaned** — removed `output: 'standalone'` (not needed for Vercel), removed iframe headers
+- [x] **.env.example created** — lists all required environment variables
+- [x] **Export conflict resolved** — gamestate.ts explicit re-exports to avoid duplicate getGameState
+- [x] **Analytics call fixed** — GameContainer.tsx trackGameFinished signature corrected
+- [x] Removed Puzzles and Leaderboard from nav, feature cards, and user menu
 
 ## Tech Stack
 - **Frontend**: Next.js 14, React, TypeScript, Tailwind CSS, Shadcn/UI
 - **Backend**: Next.js API Routes, MongoDB (multiplayer), Supabase (Auth, Realtime)
 - **Analytics**: Firebase Analytics
-- **Tests**: 63 backend tests passing
 
-## Pending Issues
-- **Google OAuth**: Requires user to enable Google provider in Supabase Dashboard. Graceful error handling in place.
+## Environment Variables
+See `.env.example` for complete list:
+- `MONGO_URL` / `DB_NAME` — MongoDB connection
+- `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Supabase
+- `NEXT_PUBLIC_FIREBASE_*` — Firebase Analytics
+- `NEXT_PUBLIC_BASE_URL` — App URL
+- `CORS_ORIGINS` — CORS configuration
 
 ## Prioritized Backlog
 
@@ -75,12 +66,10 @@ Build a full-stack web application called "XChess" — a chess platform with uni
 - Draw offer system
 
 ### P2 (Medium)
-- Puzzles page
-- Leaderboard page
 - User profile page
 - Rating system (ELO)
 
 ### P3 (Low)
-- Game analysis (deep engine)
+- Deep engine analysis
 - Spectator mode
 - Sound effects

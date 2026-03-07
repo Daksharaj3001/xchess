@@ -57,16 +57,11 @@ export default function SignUpPage() {
     try {
       const { error: googleError } = await signInWithGoogle()
       if (googleError) {
-        const msg = googleError.message || ''
-        if (msg.includes('provider is not enabled') || msg.includes('Unsupported provider')) {
-          setError('Google sign-in is not configured yet. Please enable the Google provider in your Supabase dashboard (Authentication → Providers → Google).')
-        } else {
-          setError(msg)
-        }
+        setError(googleError.message || 'Google sign-in failed')
         setGoogleLoading(false)
       }
     } catch (err) {
-      setError('Google sign-in failed. Please try email sign-up instead.')
+      setError('Google sign-in failed. Please try again.')
       setGoogleLoading(false)
     }
   }

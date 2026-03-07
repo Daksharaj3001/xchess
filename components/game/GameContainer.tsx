@@ -178,12 +178,14 @@ export function GameContainer({
           ? (gameState.currentTurn === 'white' ? 'white_wins' : 'black_wins')
           : 'draw';
         
+        const resultLabel = data.isCheckmate 
+          ? (gameState.currentTurn === 'white' ? 'win' : 'win')
+          : 'draw';
+        
         trackGameFinished(
-          gameId,
-          gameState.moveNumber,
-          gameState.gameMode,
-          resultStr as any,
-          data.isCheckmate ? 'checkmate' : 'stalemate'
+          resultLabel,
+          'online',
+          gameState.moveNumber
         );
         
         onGameEnd?.(resultStr);

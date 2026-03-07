@@ -1,4 +1,18 @@
-// Re-export replay and state modules
+// Re-export modules - state's getGameState takes priority
 export * from './serialization';
-export * from './replay';
-export * from './state';
+export { 
+  createReplayState, 
+  reconstructGameAtMove,
+  reconstructGame,
+  stepForward,
+  stepBackward,
+  jumpToMove,
+  jumpToStart,
+  jumpToEnd,
+  getGameState as getReplayGameState,
+  getMoveAt,
+  getCurrentMove,
+  getFormattedMoveList,
+} from './replay';
+export type { StoredMove, ReplayState } from './replay';
+export { getGameState, getGameForReplay, applyMoveToGame } from './state';
