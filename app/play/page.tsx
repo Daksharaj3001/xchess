@@ -235,8 +235,8 @@ function PlayContent() {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-4">
-        <div className="flex flex-col lg:flex-row gap-4 items-start justify-center">
+      <main className="container mx-auto px-2 sm:px-4 py-4">
+        <div className="flex flex-col lg:flex-row gap-4 items-center lg:items-start justify-center">
           {/* Board column */}
           <div className="flex-shrink-0" data-testid="chess-board-container">
             {/* Top player info/timer */}
@@ -303,7 +303,7 @@ function PlayContent() {
           </div>
 
           {/* Side panel */}
-          <div className="w-full lg:w-72 space-y-3" data-testid="game-side-panel">
+          <div className="w-full max-w-md lg:w-72 space-y-3" data-testid="game-side-panel">
             {isGameOver && (
               <Card className="bg-zinc-800 border-zinc-700" data-testid="game-over-card">
                 <CardContent className="py-4 text-center">

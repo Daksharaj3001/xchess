@@ -282,8 +282,23 @@ export function InteractiveBoard({
   const isMyTurn = !isSpectator && state.currentTurn === playerColor;
   const isInteractive = !disabled && !isSpectator && isMyTurn;
 
-  // Responsive square size
-  const sqPx = boardSize === 10 ? 52 : 64;
+  // Responsive square size based on viewport
+  const [sqPx, setSqPx] = useState(boardSize === 10 ? 36 : 40);
+  
+  useEffect(() => {
+    const updateSize = () => {
+      if (typeof window === 'undefined') return;
+      const vw = window.innerWidth;
+      const maxBoardWidth = Math.min(vw - 32, 520); // 32px padding, max 520px
+      const calculatedSqPx = Math.floor(maxBoardWidth / boardSize);
+      const minSqPx = boardSize === 10 ? 36 : 40;
+      const maxSqPx = boardSize === 10 ? 52 : 64;
+      setSqPx(Math.max(minSqPx, Math.min(maxSqPx, calculatedSqPx)));
+    };
+    updateSize();
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
+  }, [boardSize]);
 
   useEffect(() => {
     trackBoardLoaded(state.gameMode === 'v2_artillery' ? 'online' : 'vs_ai');
