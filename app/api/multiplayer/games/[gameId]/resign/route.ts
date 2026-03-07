@@ -2,7 +2,7 @@
  * POST /api/multiplayer/games/[gameId]/resign - Resign from game
  */
 import { NextRequest, NextResponse } from 'next/server';
-import { getDb } from '@/lib/mongodb';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 
 export async function POST(
   request: NextRequest,
@@ -13,12 +13,18 @@ export async function POST(
     const body = await request.json();
     const { playerColor } = body as { playerColor: 'white' | 'black' };
 
-    const db = await getDb();
-    const game = await db.collection('games').findOne({ gameId });
+    const supabase = getSupabaseAdmin();
+    const { data: row, error: fetchErr } = await supabase
+      .from('multiplayer_games')
+      .select('data')
+      .eq('game_id', gameId)
+      .single() as { data: any; error: any };
 
-    if (!game) {
+    if (fetchErr || !row) {
       return NextResponse.json({ error: 'Game not found' }, { status: 404 });
     }
+
+    const game = row.data as Record<string, any>;
 
     if (game.status !== 'active') {
       return NextResponse.json({ error: 'Game is not active' }, { status: 400 });
@@ -26,16 +32,16 @@ export async function POST(
 
     const winner = playerColor === 'white' ? 'black' : 'white';
 
-    await db.collection('games').updateOne(
-      { gameId },
-      {
-        $set: {
-          status: 'completed',
-          result: `${winner}_wins`,
-          updatedAt: new Date().toISOString(),
-        },
-      }
-    );
+    game.status = 'completed';
+    game.result = `${winner}_wins`;
+    game.updatedAt = new Date().toISOString();
+
+    const { error: updateErr } = await supabase
+      .from('multiplayer_games')
+      .update({ data: game })
+      .eq('game_id', gameId);
+
+    if (updateErr) throw updateErr;
 
     return NextResponse.json({
       success: true,

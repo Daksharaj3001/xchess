@@ -47,14 +47,13 @@ Build a full-stack web application called "XChess" — a chess platform with uni
 
 ## Tech Stack
 - **Frontend**: Next.js 14, React, TypeScript, Tailwind CSS, Shadcn/UI
-- **Backend**: Next.js API Routes, MongoDB (multiplayer), Supabase (Auth, Realtime)
+- **Backend**: Next.js API Routes, Supabase (PostgreSQL, Auth, Realtime)
 - **Analytics**: Firebase Analytics
 
 ## Environment Variables
 See `.env.example` for complete list:
-- `MONGO_URL` / `DB_NAME` — MongoDB connection
 - `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Supabase
-- `NEXT_PUBLIC_FIREBASE_*` — Firebase Analytics
+- `NEXT_PUBLIC_FIREBASE_*` — Firebase Analytics (optional)
 - `NEXT_PUBLIC_BASE_URL` — App URL
 - `CORS_ORIGINS` — CORS configuration
 

@@ -4,7 +4,7 @@
  * Handles timer logic: deduct elapsed time, add increment, detect timeout
  */
 import { NextRequest, NextResponse } from 'next/server';
-import { getDb } from '@/lib/mongodb';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { applyMove, getLegalMoves } from '@/lib/xchess';
 import type { GameState, Position, PieceType } from '@/lib/xchess/types';
 
@@ -24,12 +24,18 @@ export async function POST(
       moveNumber: number;
     };
 
-    const db = await getDb();
-    const game = await db.collection('games').findOne({ gameId });
+    const supabase = getSupabaseAdmin();
+    const { data: row, error: fetchErr } = await supabase
+      .from('multiplayer_games')
+      .select('data')
+      .eq('game_id', gameId)
+      .single() as { data: any; error: any };
 
-    if (!game) {
+    if (fetchErr || !row) {
       return NextResponse.json({ error: 'Game not found' }, { status: 404 });
     }
+
+    const game = row.data as Record<string, any>;
 
     if (game.status !== 'active') {
       return NextResponse.json({ error: 'Game is not active' }, { status: 400 });
@@ -63,10 +69,11 @@ export async function POST(
       if (playerColor === 'white') {
         whiteTimeMs = Math.max(0, whiteTimeMs - elapsed);
         if (whiteTimeMs <= 0) {
-          // Timeout — opponent wins
-          await db.collection('games').updateOne({ gameId }, {
-            $set: { status: 'completed', result: 'black_wins', whiteTimeMs: 0, updatedAt: new Date().toISOString() },
-          });
+          game.status = 'completed';
+          game.result = 'black_wins';
+          game.whiteTimeMs = 0;
+          game.updatedAt = new Date().toISOString();
+          await supabase.from('multiplayer_games').update({ data: game }).eq('game_id', gameId);
           return NextResponse.json({
             success: false, error: 'Time expired',
             gameStatus: 'completed', gameResult: 'black_wins',
@@ -76,9 +83,11 @@ export async function POST(
       } else {
         blackTimeMs = Math.max(0, blackTimeMs - elapsed);
         if (blackTimeMs <= 0) {
-          await db.collection('games').updateOne({ gameId }, {
-            $set: { status: 'completed', result: 'white_wins', blackTimeMs: 0, updatedAt: new Date().toISOString() },
-          });
+          game.status = 'completed';
+          game.result = 'white_wins';
+          game.blackTimeMs = 0;
+          game.updatedAt = new Date().toISOString();
+          await supabase.from('multiplayer_games').update({ data: game }).eq('game_id', gameId);
           return NextResponse.json({
             success: false, error: 'Time expired',
             gameStatus: 'completed', gameResult: 'white_wins',
@@ -113,22 +122,22 @@ export async function POST(
       gameResult = 'draw';
     }
 
-    await db.collection('games').updateOne(
-      { gameId },
-      {
-        $set: {
-          state: JSON.parse(JSON.stringify(result.newState)),
-          legalMoves: JSON.parse(JSON.stringify(newLegalMoves)),
-          status: newStatus,
-          result: gameResult,
-          moveCount: result.newState.moveHistory.length,
-          whiteTimeMs,
-          blackTimeMs,
-          lastMoveAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        },
-      }
-    );
+    game.state = result.newState;
+    game.legalMoves = newLegalMoves;
+    game.status = newStatus;
+    game.result = gameResult;
+    game.moveCount = result.newState.moveHistory.length;
+    game.whiteTimeMs = whiteTimeMs;
+    game.blackTimeMs = blackTimeMs;
+    game.lastMoveAt = new Date().toISOString();
+    game.updatedAt = new Date().toISOString();
+
+    const { error: updateErr } = await supabase
+      .from('multiplayer_games')
+      .update({ data: game })
+      .eq('game_id', gameId);
+
+    if (updateErr) throw updateErr;
 
     return NextResponse.json({
       success: true,

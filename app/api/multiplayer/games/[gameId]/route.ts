@@ -2,7 +2,7 @@
  * GET /api/multiplayer/games/[gameId] - Get game state
  */
 import { NextRequest, NextResponse } from 'next/server';
-import { getDb } from '@/lib/mongodb';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 
 export async function GET(
   request: NextRequest,
@@ -10,17 +10,18 @@ export async function GET(
 ) {
   try {
     const { gameId } = await params;
-    const db = await getDb();
-    const game = await db.collection('games').findOne(
-      { gameId },
-      { projection: { _id: 0 } }
-    );
+    const supabase = getSupabaseAdmin();
+    const { data, error } = await supabase
+      .from('multiplayer_games')
+      .select('data')
+      .eq('game_id', gameId)
+      .single() as { data: any; error: any };
 
-    if (!game) {
+    if (error || !data) {
       return NextResponse.json({ error: 'Game not found' }, { status: 404 });
     }
 
-    return NextResponse.json(game);
+    return NextResponse.json(data.data);
   } catch (error) {
     console.error('Get game error:', error);
     return NextResponse.json({ error: 'Failed to get game' }, { status: 500 });
