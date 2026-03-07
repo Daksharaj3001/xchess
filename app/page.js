@@ -139,7 +139,7 @@ export default function HomePage() {
             <CardContent className="py-10 text-center">
               <h2 className="text-2xl font-bold mb-3 text-white">Ready to Play?</h2>
               <p className="text-white/70 mb-6 max-w-md mx-auto text-sm">
-                Jump right in — no account needed for local play.
+                Jump right into the most unique tactical war game...
               </p>
               <div className="flex gap-3 justify-center">
                 <Link href="/play/select">
