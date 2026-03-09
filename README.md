@@ -1,265 +1,269 @@
-# XChess Platform
+# ♟️ XChess
 
-A modern chess platform with unique archer mechanics, built with Next.js, Supabase, and Firebase.
+**XChess** is a next-generation strategic board game that evolves classical chess by introducing new tactical mechanics and an expanded battlefield.
 
-## Architecture Overview
+Created by **Daksharaj Dutta**
 
-```
-xchess/
-├── app/                          # Next.js App Router
-│   ├── api/[[...path]]/          # API routes
-│   ├── auth/                     # Auth pages
-│   │   ├── login/
-│   │   ├── signup/
-│   │   ├── callback/             # OAuth callback
-│   │   ├── reset-password/
-│   │   ├── forgot-password/
-│   │   └── error/
-│   ├── layout.js                 # Root layout with providers
-│   └── page.js                   # Home page
-├── components/
-│   ├── auth/                     # Auth components
-│   │   ├── ProtectedRoute.js
-│   │   └── UserMenu.js
-│   └── ui/                       # shadcn/ui components
-├── contexts/
-│   └── AuthContext.js            # Auth state management
-├── lib/
-│   ├── api/                      # Reusable API layer
-│   │   └── index.js
-│   ├── firebase/                 # Firebase (Analytics only)
-│   │   ├── client.js
-│   │   └── analytics.js
-│   ├── supabase/                 # Supabase (Auth, DB, Realtime)
-│   │   ├── client.js             # Browser client
-│   │   ├── server.js             # Server client
-│   │   └── middleware.js         # Session management
-│   └── utils.js
-├── middleware.js                 # Route protection
-├── .env.example                  # Environment template
-└── README.md
-```
+XChess preserves the deterministic strategy of classical chess while introducing new layers of depth through a unique unit and expanded gameplay variants.
 
-## Service Responsibilities
+---
 
-### Supabase Handles:
-- **Authentication**: Email/password, Google OAuth
-- **Database**: PostgreSQL for all game data
-  - User profiles
-  - Games & moves
-  - Matchmaking queue
-  - Ratings & leaderboards
-  - Puzzles
-- **Realtime**: Live game updates via subscriptions
+## 🌐 Live Demo
 
-### Firebase Handles:
-- **Analytics**: Event tracking only
-  - Page views
-  - Game lifecycle events
-  - Move tracking (counts only)
-  - Puzzle engagement
+Play the demo here:
 
-## Environment Setup
+👉 [Play XChess](xchess-alpha.vercel.app)
 
-1. Copy `.env.example` to `.env`:
-```bash
-cp .env.example .env
-```
+Source Code:
 
-2. Fill in your credentials:
-```env
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+👉 [GitHub Repository](https://github.com/Daksharaj3001/xchess)
 
-# Firebase
-NEXT_PUBLIC_FIREBASE_API_KEY=your-api-key
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
-```
+---
 
-## Supabase Setup
+## 🎯 Vision
 
-### 1. Run Database Migrations
+XChess aims to become a **global competitive strategy platform** similar to chess platforms such as:
 
-Run the SQL migration files in order in Supabase SQL Editor:
+- Chess.com
+- Lichess
 
-```bash
-# Migration files located in /supabase/migrations/
-1. 001_initial_schema.sql    # Tables and indexes
-2. 002_rls_policies.sql      # Row Level Security
-3. 003_functions_triggers.sql # Functions and auto-triggers
-4. 004_sample_puzzles.sql    # Sample puzzle data (optional)
-```
+while introducing new strategic possibilities through innovative mechanics.
 
-### Database Tables
+The goal is to create a **modern esports-ready intellectual strategy game**.
 
-| Table | Purpose |
-|-------|---------|
-| `profiles` | User accounts with stats |
-| `ratings` | ELO ratings per category (bullet/blitz/rapid/classical/puzzle) |
-| `games` | Complete game records with state |
-| `game_moves` | Individual move history |
-| `matchmaking_queue` | Players seeking matches |
-| `puzzles` | Training puzzles |
-| `puzzle_attempts` | User puzzle history |
-| `reports` | User reports for moderation |
-| `friendships` | Friend relationships |
+---
 
-### Key Features
+## 🧠 Core Design Philosophy
 
-- **Auto Profile Creation**: Profile created automatically on signup via trigger
-- **Default Ratings**: All rating categories initialized to 1200
-- **Stats Tracking**: Game/puzzle stats auto-updated via triggers
-- **Turn Validation**: RLS ensures only current player can submit moves
+XChess is built on three principles:
 
-See `/supabase/schema.md` for complete documentation.
+### 1️⃣ Preserve Chess Integrity
+Most classical chess mechanics remain unchanged so that chess players can quickly understand the game.
 
-### 2. Enable Google OAuth
+### 2️⃣ Introduce Strategic Innovation
+A new tactical unit called the **Archer** introduces artillery-style attacks.
 
-1. Go to Supabase Dashboard > Authentication > Providers
-2. Enable Google provider
-3. Add your Google OAuth credentials:
-   - Client ID
-   - Client Secret
+### 3️⃣ Expand Strategic Depth
+A larger board mode enables more maneuvering space and deeper positional play.
 
-4. In Google Cloud Console, add redirect URIs:
-   ```
-   https://your-project.supabase.co/auth/v1/callback
-   ```
+---
 
-### 3. Configure Redirect URLs
+## 🎮 Game Modes
 
-In Supabase Dashboard > Authentication > URL Configuration:
+### V1 — Tactical Chess Mode
 
-- Site URL: `https://your-app.vercel.app`
-- Redirect URLs:
-  - `https://your-app.vercel.app/auth/callback`
-  - `http://localhost:3000/auth/callback` (for development)
+Board Size  
+8 × 8
 
-## Firebase Setup
+Starting Position  
 
-1. Create a Firebase project at [console.firebase.google.com](https://console.firebase.google.com)
-2. Enable Google Analytics
-3. Register a web app
-4. Copy the configuration to your `.env` file
+Knight - Bishop - Rook - Queen - King - Rook - Bishop - Knight
 
-## Authentication Flow
+Second Rank  
+8 Pawns
 
-### Email/Password
-1. User signs up with email/password
-2. Confirmation email sent (if enabled)
-3. On first login, profile row created in `profiles` table
-4. Session managed via cookies
+Key Difference from Chess
 
-### Google OAuth
-1. User clicks "Continue with Google"
-2. Redirected to Google for auth
-3. Callback to `/auth/callback`
-4. Session established, profile created
-5. Redirected to app
+Pawns can promote to a **new piece: Archer**
 
-## Analytics Events
+---
 
-| Event | Description | Parameters |
-|-------|-------------|------------|
-| `page_view` | Screen viewed | `page_title`, `page_location` |
-| `board_loaded` | Board rendered | `mode` |
-| `game_started` | New game begins | `mode`, `time_control` |
-| `game_finished` | Game ends | `result`, `mode`, `move_count` |
-| `move_attempted` | Move tried | - |
-| `move_committed` | Move confirmed | - |
-| `illegal_move_attempt` | Invalid move | `reason` |
-| `archer_fire_mode_opened` | Archer UI opened | - |
-| `archer_fire_confirmed` | Shot fired | `hit` |
-| `puzzle_start` | Puzzle begun | `difficulty` |
-| `puzzle_complete` | Puzzle finished | `success`, `attempts`, `time_spent_seconds` |
+### V2 — XChess Artillery Mode
 
-## API Layer Usage
+Board Size  
+10 × 10
 
-```javascript
-import { api } from '@/lib/api'
+Starting Position
 
-// Games
-const game = await api.games.create({ timeControl: 'rapid' })
-const myGames = await api.games.getMyGames({ limit: 10 })
+Knight - Archer - Bishop - Rook - Queen - King - Rook - Bishop - Archer - Knight
 
-// Matchmaking
-await api.matchmaking.joinQueue({ time_control: 'blitz' })
+Second Rank  
+10 Pawns
 
-// Puzzles
-const puzzle = await api.puzzles.getRandom('medium')
-```
+Purpose
 
-## Protected Routes
+• Increased maneuvering space  
+• New strategic openings  
+• More complex positional play
 
-Routes requiring authentication:
-- `/profile`
-- `/settings`
-- `/play`
-- `/games`
+---
 
-Use the `ProtectedRoute` component for client-side protection:
+## 🏹 The Archer Piece
 
-```jsx
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
+The **Archer** is the defining mechanic of XChess.
 
-export default function PlayPage() {
-  return (
-    <ProtectedRoute>
-      <GameBoard />
-    </ProtectedRoute>
-  )
-}
-```
+### Movement
 
-## Development
+The Archer moves **one square in any direction**, similar to a King.
 
-```bash
-# Install dependencies
-yarn install
+This allows tactical positioning while keeping movement intuitive.
 
-# Run development server
-yarn dev
+---
 
-# Build for production
-yarn build
-```
+### Archer Actions
 
-## Deployment
+Each turn the Archer may perform **one action**:
 
-### Vercel
+• Move  
+• Fire
 
-1. Connect your GitHub repository
-2. Add environment variables in Vercel dashboard
-3. Deploy
+The Archer **cannot move and fire in the same turn**.
 
-### Environment Variables for Vercel
+---
 
-Add all variables from `.env.example` to your Vercel project settings.
+### Archer Firing Mechanic
 
-## Security Notes
+The Archer can fire at **six artillery squares**.
 
-- **Anon Key**: Safe to expose in browser (Row Level Security enforced)
-- **Service Role Key**: NEVER expose to client (server-side only)
-- All database operations go through RLS policies
-- OAuth uses secure PKCE flow
+Forward Targets
 
-## Database Schema (Future)
+• 3 squares forward  
+• left of that square  
+• right of that square  
 
-See `/supabase/schema.md` for complete database documentation.
+Backward Targets
 
-### Quick Reference
+• 3 squares backward  
+• left of that square  
+• right of that square  
 
-**Game record stores:**
-- Players (white_player_id, black_player_id)
-- Game mode (standard, archer, puzzle, analysis)
-- Current state (FEN, move number, time remaining)
-- Game result (winner, termination reason, rating changes)
+---
 
-**Row Level Security ensures:**
-- Users can only edit their own profile
-- Only game participants can write moves
-- Only current player's turn can submit moves
-- Leaderboards are public read
-- Reports are private to reporter
+### Archer Attack Rules
+
+When firing:
+
+• Up to **two enemy pieces** may be targeted  
+• Friendly pieces cannot be targeted  
+• Blocking pieces do not prevent attacks  
+• Both targets are removed simultaneously
+
+---
+
+## ♟️ Classical Chess Pieces
+
+All classical pieces follow standard chess rules:
+
+King  
+Queen  
+Rook  
+Bishop  
+Knight  
+Pawn
+
+Pawn mechanics include:
+
+• En passant  
+• Two-square first move  
+• Promotion on final rank
+
+---
+
+## 🔁 Pawn Promotion
+
+Pawns can promote to:
+
+• Queen  
+• Rook  
+• Bishop  
+• Knight  
+• **Archer**
+
+The Archer promotion introduces new endgame possibilities.
+
+---
+
+## 🏆 Victory Conditions
+
+Games may end through:
+
+• Checkmate  
+• Resignation  
+• Timeout  
+• Stalemate  
+• Draw
+
+---
+
+## 🚀 Platform Features
+
+XChess is designed as a modern competitive strategy platform.
+
+Planned features include:
+
+• Real-time multiplayer  
+• ELO rating system  
+• Ranked matchmaking  
+• Spectator mode  
+• Game replays  
+• Puzzle mode  
+• Bot opponents  
+• Game analysis tools
+
+---
+
+## 🧩 Technology Stack
+
+Frontend
+
+• Next.js  
+• React  
+• TypeScript  
+• Tailwind CSS  
+
+Backend
+
+• Supabase
+
+Analytics
+
+• Firebase
+
+Deployment
+
+• Vercel
+
+---
+
+## 🎨 UI Design
+
+The interface is inspired by modern chess platforms but uses a **red-themed UI** instead of the traditional green chess aesthetic.
+
+The design is responsive and optimized for:
+
+• Desktop  
+• Mobile devices
+
+---
+
+## Screenshots
+
+<img width="1920" height="911" alt="Screenshot (1)" src="https://github.com/user-attachments/assets/78a78f60-90db-48d2-bedc-c1c8940b6978" />
+<img width="1920" height="922" alt="Screenshot (2)" src="https://github.com/user-attachments/assets/46c5a4a1-5644-48d7-8be6-0506dd12662a" />
+<img width="1912" height="870" alt="Screenshot (3)" src="https://github.com/user-attachments/assets/a4c2cc7f-34a9-4577-a4e2-0f44a97e58d7" />
+<img width="1920" height="865" alt="Screenshot (4)" src="https://github.com/user-attachments/assets/e751afb9-bfbb-4184-85c7-095e69174d7c" />
+
+---
+
+## 🌍 Long-Term Goal
+
+XChess aims to become:
+
+• A globally recognized strategy game  
+• A competitive esports-style platform  
+• A modern evolution of chess-inspired gameplay
+
+---
+
+## 👤 Creator
+
+Daksharaj Dutta  
+
+---
+
+## 📌 Current Status
+
+✔ Working online demo  
+✔ Core gameplay mechanics implemented  
+✔ Full rulebook defined  
+✔ Active development
