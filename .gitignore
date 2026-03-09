@@ -104,3 +104,4 @@ archive.zip
 # Environment files
 *.env
 *.env.*
+.env
